@@ -10,29 +10,51 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
   overflow: hidden;
+  touch-action: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 /* Views */
 .view {
-  position: relative;
-  grid-area: 1 / 1 / 2 / 2;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100vh;
-  will-change: transform;
-}
-
-.view--2 {
-  pointer-events: none;
-  opacity: 0;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+  height: 100vh;
+  will-change: transform, opacity;
 }
 
-.view--2.view--open {
-  pointer-events: auto;
-  opacity: 1;
+.view--1 {
+  z-index: 1;
+  background-color: black;
+}
+
+.view--2 {
+  z-index: 2;
+  background-color: black;
+}
+
+/* Prevent content shifting during transitions */
+.view > * {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Ensure smooth scrolling in projects view */
+.view--2 .container {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbars but keep functionality */
+.view--2 .container::-webkit-scrollbar {
+  display: none;
+}
+
+.view--2 .container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
