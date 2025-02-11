@@ -9,17 +9,30 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
+  overflow: hidden;
 }
 
-/* Custom scroll behavior */
-html {
-  scroll-behavior: smooth;
+/* Views */
+.view {
+  position: relative;
+  grid-area: 1 / 1 / 2 / 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100vh;
+  will-change: transform;
 }
 
-/* Prevent text selection */
-h1 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+.view--2 {
+  pointer-events: none;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.view--2.view--open {
+  pointer-events: auto;
+  opacity: 1;
 }
