@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import personImage from './assets/images/person.png';
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         {/* Image Container */}
         <div className="absolute inset-0 md:right-0 md:w-1/2 h-full">
           <img 
-            src="https://github.com/Hassanjk/figma-portfolio-test1/raw/main/assets/images/Person.png"
+            src={personImage}
             alt="Designer"
             className="w-full h-full object-cover opacity-50 md:opacity-100"
           />
@@ -31,13 +32,12 @@ function App() {
         </div>
         
         {/* Text Content */}
-        <div className="relative z-10 min-h-screen flex flex-col justify-center px-6 md:px-16 lg:px-24">
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] leading-none font-bold tracking-tight max-w-4xl">
+        <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-6 md:px-16 lg:px-24">
+          <h1 className="text-5xl md:text-7xl lg:text-[8rem] leading-tight font-bold tracking-tight md:mr-[-26%]">
             Digital
             <br />
-            <span className="md:ml-24">Product</span>
-            <br />
-            <span className="md:ml-12">Designer</span>
+            <span className="block md:ml-24 -mt-4">Product</span>
+            <span className="block md:ml-12 -mt-4">Designer</span>
           </h1>
         </div>
 
