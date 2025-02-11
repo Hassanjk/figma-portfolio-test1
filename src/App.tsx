@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import personImage from './assets/images/person.png';
@@ -9,34 +9,48 @@ import { Observer } from 'gsap/Observer';
 gsap.registerPlugin(Observer);
 
 function AppContent() {
-  const [isAnimating, setIsAnimating] = useState(false);
   const [currentView, setCurrentView] = useState(1);
+  const isAnimatingRef = useRef(false);
+  const observerRef = useRef<any>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    let timeline: gsap.core.Timeline;
-
     const handleScroll = () => {
-      if (isAnimating) return;
-      setIsAnimating(true);
+      if (isAnimatingRef.current) return;
+      isAnimatingRef.current = true;
+
+      // Temporarily disable the observer during animation
+      if (observerRef.current) {
+        observerRef.current.disable();
+      }
 
       const view1 = document.querySelector('.view--1');
       const view2 = document.querySelector('.view--2');
 
       if (!view1 || !view2) return;
 
-      timeline = gsap.timeline({
+      // Kill any existing timeline
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+      }
+
+      timelineRef.current = gsap.timeline({
         defaults: {
           duration: 1.6,
           ease: 'power3.inOut'
         },
         onComplete: () => {
-          setIsAnimating(false);
+          isAnimatingRef.current = false;
+          // Re-enable the observer after animation
+          if (observerRef.current) {
+            observerRef.current.enable();
+          }
         }
       });
 
       if (currentView === 1) {
         // Going from view 1 to view 2
-        timeline
+        timelineRef.current
           .set(view2, {
             yPercent: 100,
             opacity: 0
@@ -53,7 +67,7 @@ function AppContent() {
           });
       } else {
         // Going from view 2 to view 1
-        timeline
+        timelineRef.current
           .to(view2, {
             yPercent: 100
           })
@@ -67,15 +81,15 @@ function AppContent() {
     };
 
     // Initialize the GSAP Observer
-    Observer.create({
+    observerRef.current = Observer.create({
       type: 'wheel,touch,pointer',
       onUp: () => {
-        if (currentView === 1 && !isAnimating) {
+        if (currentView === 1 && !isAnimatingRef.current) {
           handleScroll();
         }
       },
       onDown: () => {
-        if (currentView === 2 && !isAnimating) {
+        if (currentView === 2 && !isAnimatingRef.current) {
           handleScroll();
         }
       },
@@ -84,11 +98,14 @@ function AppContent() {
     });
 
     return () => {
-      if (timeline) {
-        timeline.kill();
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+      }
+      if (observerRef.current) {
+        observerRef.current.kill();
       }
     };
-  }, [isAnimating, currentView]);
+  }, [currentView]);
 
   return (
     <div className="bg-black min-h-screen text-white overflow-hidden">
