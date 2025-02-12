@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import personImage from './assets/images/person.png';
+import personImage from './assets/img/person.png';
 import Projects from './pages/Projects';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
