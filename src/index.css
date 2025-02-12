@@ -1,239 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://use.typekit.net/vxy2fer.css');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Space Grotesk', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #121a27;
-  color: #4a525e;
-  overflow: hidden;
-  touch-action: none;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-}
-
-/* Hide all scrollbars globally */
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-*::-webkit-scrollbar {
-  display: none;
-}
-
-/* Views */
-.view {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: #121a27;
-  overflow: hidden;
-  visibility: hidden;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
-.view--2 {
-  overflow: hidden;
-}
-
-/* Content */
-.content {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  position: relative;
-  justify-content: center;
-}
-
-/* Gallery Styles */
-.gallery {
-  display: flex;
-  margin-left: 12vw;
-  padding-right: 12vw;
-}
-
-.gallery__item {
-  margin: 0 3vw;
-  display: grid;
-  grid-template-areas: '... ...' 
-                       '... gallery-image'
-                       '... ...' ;
-  grid-template-columns: 8rem 21vmax;
-  grid-template-rows: 8rem 28vmax 3rem;
-  will-change: transform;
-}
-
-.gallery__item-img {
-  grid-area: gallery-image;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  will-change: transform;
-}
-
-.gallery__item-imginner {
-  background-size: cover;
-  background-position: 50% 0;
-  width: 100%;
-  height: 100%;
-  will-change: transform;
-}
-
-.gallery__item-caption {
-  grid-area: 1 / 1 / 4 / 3;
-  display: grid;
-  grid-template-areas: 'gallery-number gallery-title' 
-                       'gallery-link ...'
-                       'gallery-link gallery-tags' ;
-  grid-template-columns: 8rem auto;
-  grid-template-rows: 8rem auto 3rem;
-}
-
-.gallery__item-title {
-  grid-area: gallery-title;
-  margin: 0;
-  font-size: clamp(2rem,5vw,4rem);
-  font-weight: 400;
-  color: #4a525e;
-  align-self: center;
-}
-
-.gallery__item-number {
-  grid-area: gallery-number;
-  font-size: clamp(2.5rem,9vw,6.5rem);
-  justify-self: end;
-  padding-right: 2rem;
-  color: #54d7e4;
-}
-
-.gallery__item-tags {
-  grid-area: gallery-tags;
-  justify-self: end;
-  font-size: 1.5rem;
-  display: grid;
-  grid-auto-flow: column;
-  grid-gap: 1rem;
-  cursor: pointer;
-  color: #4a525e;
-}
-
-.gallery__item-link {
-  grid-area: gallery-link;
-  align-self: end;
-  font-size: 1.5rem;
-  background: #e95499;
-  color: #fff;
-  text-decoration: underline;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.gallery__item-link:hover {
-  background: #fff;
-  color: #e95499;
-  text-decoration: none;
-}
-
-.gallery__text {
-  font-size: 20vw;
-  line-height: 0.8;
-  margin: 0 10vw 0 14vw;
-  text-transform: lowercase;
-  color: transparent;
-  -webkit-text-stroke: 1px #e95499;
-  text-stroke: 1px #e95499;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 800;
-}
-
-.gallery__text-inner {
-  display: block;
-}
-
-/* Cursor */
-.cursor {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-.cursor__inner {
-  fill: #79e2e6;
-  stroke: none;
-  stroke-width: 1px;
-}
-
-@media (any-pointer: fine) {
-  .cursor {
-    display: block;
-  }
-}
-
-/* Loading state */
-.loading {
-  height: 100vh;
-  overflow: hidden;
-}
-
-.loading::before,
-.loading::after {
-  content: '';
-  position: fixed;
-  z-index: 1000;
-}
-
-.loading::before {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #121a27;
-}
-
-.loading::after {
-  top: 50%;
-  left: 50%;
-  width: 60px;
-  height: 60px;
-  margin: -30px 0 0 -30px;
-  border-radius: 50%;
-  opacity: 0.4;
-  background: #54d7e4;
-  animation: loaderAnim 0.7s linear infinite alternate forwards;
-}
-
-@keyframes loaderAnim {
-  to {
-    opacity: 1;
-    transform: scale3d(0.5,0.5,1);
-  }
-}@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: halyard-display, sans-serif;
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #121a27;
@@ -334,9 +108,11 @@ body {
   grid-area: gallery-title;
   margin: 0;
   font-size: clamp(2rem,5vw,4rem);
-  font-weight: 400;
+  font-weight: 800;
+  font-style: italic;
   color: #4a525e;
   align-self: center;
+  font-family: moret, serif;
 }
 
 .gallery__item-number {
@@ -345,6 +121,9 @@ body {
   justify-self: end;
   padding-right: 2rem;
   color: #54d7e4;
+  font-family: moret, serif;
+  font-weight: 800;
+  font-style: italic;
 }
 
 .gallery__item-tags {
@@ -389,8 +168,9 @@ body {
   color: transparent;
   -webkit-text-stroke: 1px #e95499;
   text-stroke: 1px #e95499;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: moret, serif;
   font-weight: 800;
+  font-style: italic;
 }
 
 .gallery__text-inner {

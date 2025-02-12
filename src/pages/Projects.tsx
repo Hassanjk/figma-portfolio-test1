@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
 import imagesLoaded from 'imagesloaded';
-import { randomNumber } from '../check-implement-same/js/utils';
+import { randomNumber, preloadFonts } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
 
 const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
@@ -27,7 +27,11 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
 
     const initializeScrollAndCursor = async () => {
       try {
-        await preloadImages();
+        // Preload both images and fonts
+        await Promise.all([
+          preloadImages(),
+          preloadFonts('vxy2fer') // Adobe Typekit kit ID from the original project
+        ]);
         
         console.log('Initializing Locomotive Scroll');
         const scrollContainer = document.querySelector('[data-scroll-container]');
@@ -108,6 +112,12 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
     };
   }, []);
 
+  const projectTitles = [
+    'Funambulist', 'Omophagy', 'Conniption', 'Xenology', 
+    'Lycanthropy', 'Mudlark', 'Illywhacker', 'Disenthral',
+    'Abaya', 'Hallux', 'Lablab', 'Momisom'
+  ];
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <main data-scroll-container className="h-full">
@@ -134,7 +144,7 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
                   />
                 </div>
                 <figcaption className="gallery__item-caption">
-                  <h2 className="gallery__item-title">Project {num}</h2>
+                  <h2 className="gallery__item-title">{projectTitles[num-1]}</h2>
                   <span className="gallery__item-number">{String(num).padStart(2, '0')}</span>
                   <p className="gallery__item-tags">
                     <span>#design</span>
