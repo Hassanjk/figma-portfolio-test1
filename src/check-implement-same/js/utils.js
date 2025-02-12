@@ -1,4 +1,4 @@
-const imagesLoaded = require('imagesloaded');
+import imagesLoaded from 'imagesloaded';
 
 // Map number x from range [a, b] to [c, d]
 const map = (x, a, b, c, d) => (x - a) * (d - c) / (b - a) + c;
@@ -25,7 +25,7 @@ const preloadImages = (selector = 'img') => {
     });
 };
 
-// Preload images
+// Preload fonts
 const preloadFonts = (id) => {
     return new Promise((resolve) => {
         WebFont.load({

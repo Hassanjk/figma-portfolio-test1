@@ -1,26 +1,87 @@
-import React, { forwardRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import LocomotiveScroll from 'locomotive-scroll';
+import { preloadImages } from '../check-implement-same/js/utils';
+import Cursor from '../check-implement-same/js/cursor';
 
-const Projects = forwardRef<HTMLDivElement>((props, ref) => {
+const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
+  const cursorRef = useRef<any>(null);
+  const scrollRef = useRef<any>(null);
+
+  useEffect(() => {
+    // Initialize Locomotive Scroll
+    scrollRef.current = new LocomotiveScroll({
+      el: document.querySelector('[data-scroll-container]'),
+      smooth: true,
+      direction: 'horizontal'
+    });
+
+    // Initialize custom cursor
+    cursorRef.current = new Cursor(document.querySelector('.cursor'));
+
+    // Mouse effects on all links and others
+    [...document.querySelectorAll('a,.gallery__item-img,.gallery__item-number')].forEach(link => {
+      link.addEventListener('mouseenter', () => cursorRef.current?.enter());
+      link.addEventListener('mouseleave', () => cursorRef.current?.leave());
+    });
+
+    // Preload images
+    Promise.all([preloadImages('.gallery__item-imginner')]).then(() => {
+      document.body.classList.remove('loading');
+    });
+
+    return () => {
+      scrollRef.current?.destroy();
+      document.body.classList.remove('loading');
+    };
+  }, []);
+
   return (
-    <div className="h-full w-full overflow-hidden">
-      <div ref={ref} className="container mx-auto px-6 h-full overflow-y-auto">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 pt-24">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-24">
-          {/* Sample Project Cards */}
-          {[1, 2, 3, 4, 5, 6].map((index) => (
-            <div 
-              key={index} 
-              className="bg-zinc-900 rounded-lg overflow-hidden transform transition-transform hover:scale-[1.02]"
-            >
-              <div className="aspect-video bg-zinc-800"></div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Project {index}</h3>
-                <p className="text-gray-400">Brief description of the project goes here. This is a sample project card.</p>
-              </div>
+    <div className="relative w-full h-screen overflow-hidden bg-black text-white">
+      <main data-scroll-container>
+        <div className="content">
+          <div className="gallery" id="gallery">
+            <div className="gallery__text">
+              <span className="gallery__text-inner" data-scroll data-scroll-speed="3" data-scroll-direction="vertical">
+                Creative
+              </span>
+              <span data-scroll data-scroll-speed="-4" data-scroll-direction="vertical" className="gallery__text-inner">
+                Works
+              </span>
             </div>
-          ))}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
+              <figure key={num} className="gallery__item" data-scroll data-scroll-speed="1">
+                <div className="gallery__item-img">
+                  <div 
+                    className="gallery__item-imginner" 
+                    style={{ backgroundImage: `url(/src/assets/img/demo4/${num}.jpg)` }}
+                  />
+                </div>
+                <figcaption className="gallery__item-caption">
+                  <h2 className="gallery__item-title">Project {num}</h2>
+                  <span className="gallery__item-number">{String(num).padStart(2, '0')}</span>
+                  <p className="gallery__item-tags">
+                    <span>#design</span>
+                    <span>#creative</span>
+                    <span>#development</span>
+                  </p>
+                  <a className="gallery__item-link">explore</a>
+                </figcaption>
+              </figure>
+            ))}
+            <div className="gallery__text">
+              <span className="gallery__text-inner" data-scroll data-scroll-speed="-4" data-scroll-direction="vertical">
+                Portfolio
+              </span>
+              <span data-scroll data-scroll-speed="3" data-scroll-direction="vertical" className="gallery__text-inner">
+                2025
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
+      <svg className="cursor" width="20" height="20" viewBox="0 0 20 20">
+        <circle className="cursor__inner" cx="10" cy="10" r="5"/>
+      </svg>
     </div>
   );
 });
