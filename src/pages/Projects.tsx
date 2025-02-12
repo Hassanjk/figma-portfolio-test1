@@ -121,10 +121,10 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
           <div className="gallery" id="gallery">
             <div className="gallery__text">
               <span className="gallery__text-inner" data-scroll data-scroll-speed="-4" data-scroll-direction="vertical">
-                Ariel
+                Explore
               </span>
               <span data-scroll data-scroll-speed="3" data-scroll-direction="vertical" className="gallery__text-inner">
-                Croze
+                now!
               </span>
             </div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num, idx) => (
@@ -176,10 +176,10 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
             ))}
             <div className="gallery__text">
               <span className="gallery__text-inner" data-scroll data-scroll-speed="3" data-scroll-direction="vertical">
-                Daria
+                Just
               </span>
               <span data-scroll data-scroll-speed="-4" data-scroll-direction="vertical" className="gallery__text-inner">
-                Gaita
+                Amazing
               </span>
             </div>
           </div>

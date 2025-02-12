@@ -115,12 +115,15 @@ function AppContent() {
             
             {/* Text Content */}
             <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-6 md:px-16 lg:px-24">
-              <h1 className="text-5xl md:text-7xl lg:text-[8rem] leading-tight font-bold tracking-tight md:mr-[-26%]">
+              <h1 className="hero-title text-6xl md:text-8xl lg:text-[6.4rem] w-full md:mr-[-79%]">
                 Digital
                 <br />
-                <span className="block md:ml-24 -mt-4">Product</span>
-                <span className="block md:ml-12 -mt-4">Designer</span>
+                <span className="block md:ml-32">Product</span>
+                <span className="block md:ml-16">Designer</span>
               </h1>
+              <p className="hero-sub text-xl md:text-2xl mt-8 text-gray-400 max-w-md">
+                Crafting immersive digital experiences through innovative design solutions
+              </p>
             </div>
 
             {/* Scroll Indicator */}

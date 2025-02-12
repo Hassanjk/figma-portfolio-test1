@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap');
+
 @import url('https://use.typekit.net/vxy2fer.css');
 
 @tailwind base;
@@ -277,4 +279,20 @@ html.has-scroll-dragging {
   vertical-align: top;
   white-space: nowrap;
   height: 100%;
+}
+
+.hero-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  background: linear-gradient(45deg, #f0ecec, #d1d1d1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-sub {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 300;
 }
