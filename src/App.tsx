@@ -10,115 +10,45 @@ gsap.registerPlugin(Observer);
 
 function AppContent() {
   const [currentView, setCurrentView] = useState(1);
-  const isAnimatingRef = useRef(false);
-  const observerRef = useRef<any>(null);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
 
   const handleViewTransition = (direction: 'up' | 'down') => {
-    if (isAnimatingRef.current || !view1Ref.current || !view2Ref.current) return;
-    isAnimatingRef.current = true;
-
-    // Temporarily disable the observer during animation
-    if (observerRef.current) {
-      observerRef.current.disable();
-    }
-
-    // Kill any existing timeline
-    if (timelineRef.current) {
-      timelineRef.current.kill();
-    }
-
-    const view1 = view1Ref.current;
-    const view2 = view2Ref.current;
-
-    timelineRef.current = gsap.timeline({
-      defaults: {
-        duration: 1,
-        ease: 'power3.inOut'
-      },
-      onComplete: () => {
-        isAnimatingRef.current = false;
-        if (observerRef.current) {
-          observerRef.current.enable();
-        }
-      }
-    });
-
+    console.log('Transition triggered:', direction); // Debug log
+    
     if (direction === 'down' && currentView === 1) {
-      // Going from view 1 to view 2
-      gsap.set(view2, {
-        yPercent: 100,
-        display: 'block',
-        autoAlpha: 1
-      });
-
-      timelineRef.current
-        .to(view1, {
-          yPercent: -100,
-          autoAlpha: 0
-        })
-        .to(view2, {
-          yPercent: 0
-        }, '<')
-        .add(() => {
-          setCurrentView(2);
-          gsap.set(view1, { display: 'none' });
-        });
+      gsap.to(view1Ref.current, { yPercent: -100 });
+      gsap.to(view2Ref.current, { yPercent: 0 });
+      setCurrentView(2);
     } else if (direction === 'up' && currentView === 2) {
-      // Going from view 2 to view 1
-      gsap.set(view1, {
-        yPercent: -100,
-        display: 'block',
-        autoAlpha: 1
-      });
-
-      timelineRef.current
-        .to(view2, {
-          yPercent: 100,
-          autoAlpha: 0
-        })
-        .to(view1, {
-          yPercent: 0
-        }, '<')
-        .add(() => {
-          setCurrentView(1);
-          gsap.set(view2, { display: 'none' });
-        });
+      gsap.to(view1Ref.current, { yPercent: 0 });
+      gsap.to(view2Ref.current, { yPercent: 100 });
+      setCurrentView(1);
     }
   };
 
   useEffect(() => {
-    // Initialize view states
-    if (view1Ref.current && view2Ref.current) {
-      gsap.set(view2Ref.current, {
-        yPercent: 100,
-        display: 'none',
-        autoAlpha: 0
-      });
-    }
+    // Initial setup
+    gsap.set(view2Ref.current, { yPercent: 100 });
 
-    // Initialize the GSAP Observer with improved touch handling
-    observerRef.current = Observer.create({
-      type: 'wheel,touch,pointer',
-      onUp: () => handleViewTransition('down'),
-      onDown: () => handleViewTransition('up'),
-      tolerance: 10,
-      wheelSpeed: -1,
+    const observer = Observer.create({
+      target: window,
+      type: 'wheel',  // Changed to only wheel events
+      onChange: (event) => {
+        const scrollingDown = event.deltaY > 0;
+        const scrollingUp = event.deltaY < 0;
+
+        if (scrollingDown && currentView === 1) {
+          handleViewTransition('down');
+        } else if (scrollingUp && currentView === 2) {
+          handleViewTransition('up');
+        }
+      },
       preventDefault: true
     });
 
-    // Cleanup
-    return () => {
-      if (timelineRef.current) {
-        timelineRef.current.kill();
-      }
-      if (observerRef.current) {
-        observerRef.current.kill();
-      }
-    };
-  }, [currentView]);
+    return () => observer.kill();
+  }, [currentView]); // Added currentView dependency
 
   return (
     <div className="bg-black min-h-screen text-white overflow-hidden">

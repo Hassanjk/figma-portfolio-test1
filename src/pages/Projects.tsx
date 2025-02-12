@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
-const Projects = () => {
+const Projects = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <div className="h-full w-full overflow-hidden">
-      <div className="container mx-auto px-6 h-full overflow-y-auto">
+      <div ref={ref} className="container mx-auto px-6 h-full overflow-y-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-12 pt-24">Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-24">
           {/* Sample Project Cards */}
@@ -23,6 +23,6 @@ const Projects = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Projects;
