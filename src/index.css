@@ -16,6 +16,16 @@ body {
   height: 100%;
 }
 
+/* Hide all scrollbars globally */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* Views */
 .view {
   position: absolute;
@@ -24,4 +34,9 @@ body {
   width: 100%;
   height: 100vh;
   background-color: black;
+  overflow: hidden; /* Add this line */
+}
+
+.view--2 {
+  overflow: hidden; /* Add this line */
 }
