@@ -34,7 +34,10 @@ body {
   width: 100%;
   height: 100vh;
   background-color: black;
-  overflow: hidden; /* Add this line */
+  overflow: hidden;
+  visibility: hidden;  /* Hide by default */
+  backface-visibility: hidden;  /* Prevent flickering */
+  transform: translateZ(0);  /* Force GPU acceleration */
 }
 
 .view--2 {

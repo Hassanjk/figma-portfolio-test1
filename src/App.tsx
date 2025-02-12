@@ -10,31 +10,61 @@ gsap.registerPlugin(Observer);
 
 function AppContent() {
   const [currentView, setCurrentView] = useState(1);
+  const [isAnimating, setIsAnimating] = useState(false);
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
 
   const handleViewTransition = (direction: 'up' | 'down') => {
-    console.log('Transition triggered:', direction); // Debug log
-    
+    if (isAnimating) return;
+    setIsAnimating(true);
+
+    const tl = gsap.timeline({
+      defaults: {
+        duration: 1.5,
+        ease: "power2.inOut"
+      },
+      onComplete: () => setIsAnimating(false)
+    });
+
     if (direction === 'down' && currentView === 1) {
-      gsap.to(view1Ref.current, { yPercent: -100 });
-      gsap.to(view2Ref.current, { yPercent: 0 });
-      setCurrentView(2);
+      tl.to(view1Ref.current, { 
+        yPercent: -100,
+      })
+      .fromTo(view2Ref.current, 
+        { yPercent: 100, visibility: 'visible' },
+        { yPercent: 0 },
+        "<"
+      )
+      .add(() => setCurrentView(2));
     } else if (direction === 'up' && currentView === 2) {
-      gsap.to(view1Ref.current, { yPercent: 0 });
-      gsap.to(view2Ref.current, { yPercent: 100 });
-      setCurrentView(1);
+      tl.to(view2Ref.current, { 
+        yPercent: 100,
+      })
+      .fromTo(view1Ref.current,
+        { yPercent: -100, visibility: 'visible' },
+        { yPercent: 0 },
+        "<"
+      )
+      .add(() => setCurrentView(1));
     }
   };
 
   useEffect(() => {
     // Initial setup
-    gsap.set(view2Ref.current, { yPercent: 100 });
+    gsap.set(view1Ref.current, { 
+      yPercent: currentView === 1 ? 0 : -100,
+      visibility: 'visible'
+    });
+    gsap.set(view2Ref.current, { 
+      yPercent: currentView === 2 ? 0 : 100,
+      visibility: 'visible'
+    });
 
     const observer = Observer.create({
       target: window,
-      type: 'wheel',  // Changed to only wheel events
+      type: 'wheel',
       onChange: (event) => {
+        if (isAnimating) return;
         const scrollingDown = event.deltaY > 0;
         const scrollingUp = event.deltaY < 0;
 
@@ -48,7 +78,7 @@ function AppContent() {
     });
 
     return () => observer.kill();
-  }, [currentView]); // Added currentView dependency
+  }, [currentView, isAnimating]);
 
   return (
     <div className="bg-black min-h-screen text-white overflow-hidden">
