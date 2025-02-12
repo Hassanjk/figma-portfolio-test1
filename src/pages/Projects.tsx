@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
 import imagesLoaded from 'imagesloaded';
-import { randomNumber } from '../check-implement-same/js/utils';
+import { preloadFonts } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
 
 const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
@@ -27,7 +27,8 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
 
     const initializeScrollAndCursor = async () => {
       try {
-        await preloadImages();
+        // Wait for both images and fonts to load
+        await Promise.all([preloadImages(), preloadFonts()]);
         
         console.log('Initializing Locomotive Scroll');
         const scrollContainer = document.querySelector('[data-scroll-container]');
@@ -37,7 +38,8 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
           el: scrollContainer,
           smooth: true,
           direction: 'horizontal',
-          lerp: 0.05,
+          multiplier: 0.9,
+          lerp: 0.1,
           tablet: {
             smooth: true,
             direction: 'horizontal',
@@ -50,24 +52,22 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
           }
         });
 
-        // Generate random rotations and translations
-        const elems = [...document.querySelectorAll('.gallery__item')];
-        const rotationsArr = Array.from({length: elems.length}, () => randomNumber(-30,30));
-        const translationArr = Array.from({length: elems.length}, () => randomNumber(-100,100));
-
+        // Add scroll event for image effects and vertical transitions
         scrollRef.current.on('scroll', (obj: any) => {
           for (const key of Object.keys(obj.currentElements)) {
-            const el = obj.currentElements[key].el;
-            const idx = elems.indexOf(el);
-            if (el.classList.contains('gallery__item')) {
-              let progress = obj.currentElements[key].progress;
-              const rotationVal = progress > 0.6 ? 
-                Math.min(Math.max(((progress - 0.6) / 0.4) * rotationsArr[idx], Math.min(0, rotationsArr[idx])), 
-                Math.max(0, rotationsArr[idx])) : 0;
-              const translationVal = progress > 0.6 ? 
-                Math.min(Math.max(((progress - 0.6) / 0.4) * translationArr[idx], Math.min(0, translationArr[idx])), 
-                Math.max(0, translationArr[idx])) : 0;
-              el.style.transform = `translateY(${translationVal}%) rotate(${rotationVal}deg)`;
+            const element = obj.currentElements[key];
+            
+            // Handle image inner effects
+            if (element.el.classList.contains('gallery__item-imginner')) {
+              let progress = element.progress;
+              const saturateVal = progress < 0.5 ? 
+                Math.max(0, Math.min(1, progress * 2)) : 
+                Math.max(0, Math.min(1, (1 - progress) * 2));
+              const brightnessVal = progress < 0.5 ? 
+                Math.max(0, Math.min(1, progress * 2)) : 
+                Math.max(0, Math.min(1, (1 - progress) * 2));
+              element.el.style.filter = 
+                `saturate(${saturateVal}) brightness(${brightnessVal})`;
             }
           }
         });
@@ -108,34 +108,63 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
     };
   }, []);
 
+  const projectTitles = [
+    'Funambulist', 'Omophagy', 'Conniption', 'Xenology', 
+    'Lycanthropy', 'Mudlark', 'Illywhacker', 'Disenthral',
+    'Abaya', 'Hallux', 'Lablab', 'Momisom'
+  ];
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <main data-scroll-container className="h-full">
         <div className="content">
           <div className="gallery" id="gallery">
             <div className="gallery__text">
-              <span className="gallery__text-inner" data-scroll data-scroll-speed="3" data-scroll-direction="vertical">
-                draga
+              <span className="gallery__text-inner" data-scroll data-scroll-speed="-4" data-scroll-direction="vertical">
+                Ariel
               </span>
-              <span data-scroll data-scroll-speed="-4" data-scroll-direction="vertical" className="gallery__text-inner">
-                armor
+              <span data-scroll data-scroll-speed="3" data-scroll-direction="vertical" className="gallery__text-inner">
+                Croze
               </span>
             </div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
-              <figure key={num} className="gallery__item" data-scroll data-scroll-speed="1">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num, idx) => (
+              <figure 
+                key={num} 
+                className="gallery__item" 
+                data-scroll 
+                data-scroll-speed={idx % 2 === 0 ? "2" : "-2"} 
+                data-scroll-direction="vertical"
+              >
                 <div className="gallery__item-img">
                   <div 
                     className="gallery__item-imginner" 
+                    data-scroll 
+                    data-scroll-speed="1" 
+                    data-scroll-direction="vertical"
                     style={{ 
-                      backgroundImage: `url(src/assets/img/demo4/${14-num}.jpg)`,
+                      backgroundImage: `url(src/assets/img/demo1/${num}.jpg)`,
                       backgroundSize: 'cover',
-                      backgroundPosition: '50% 0'
+                      backgroundPosition: '50% 25%'
                     }}
                   />
                 </div>
                 <figcaption className="gallery__item-caption">
-                  <h2 className="gallery__item-title">Project {num}</h2>
-                  <span className="gallery__item-number">{String(num).padStart(2, '0')}</span>
+                  <h2 
+                    className="gallery__item-title" 
+                    data-scroll 
+                    data-scroll-speed={idx % 2 === 0 ? "1.5" : "-1.5"}
+                    data-scroll-direction="vertical"
+                  >
+                    {projectTitles[num-1]}
+                  </h2>
+                  <span 
+                    className="gallery__item-number"
+                    data-scroll 
+                    data-scroll-speed={idx % 2 === 0 ? "2" : "-2"}
+                    data-scroll-direction="vertical"
+                  >
+                    {String(num).padStart(2, '0')}
+                  </span>
                   <p className="gallery__item-tags">
                     <span>#design</span>
                     <span>#creative</span>
@@ -146,11 +175,11 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
               </figure>
             ))}
             <div className="gallery__text">
-              <span className="gallery__text-inner" data-scroll data-scroll-speed="-4" data-scroll-direction="vertical">
-                Hexed
+              <span className="gallery__text-inner" data-scroll data-scroll-speed="3" data-scroll-direction="vertical">
+                Daria
               </span>
-              <span data-scroll data-scroll-speed="3" data-scroll-direction="vertical" className="gallery__text-inner">
-                kambu
+              <span data-scroll data-scroll-speed="-4" data-scroll-direction="vertical" className="gallery__text-inner">
+                Gaita
               </span>
             </div>
           </div>
