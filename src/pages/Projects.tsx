@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
-import { preloadImages } from '../check-implement-same/js/utils';
+import imagesLoaded from 'imagesloaded';
+import { randomNumber } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
 
 const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
@@ -8,44 +9,116 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
   const scrollRef = useRef<any>(null);
 
   useEffect(() => {
-    // Initialize Locomotive Scroll
-    scrollRef.current = new LocomotiveScroll({
-      el: document.querySelector('[data-scroll-container]'),
-      smooth: true,
-      direction: 'horizontal'
-    });
+    console.log('Initializing Projects component');
+    document.body.classList.add('loading');
 
-    // Initialize custom cursor
-    cursorRef.current = new Cursor(document.querySelector('.cursor'));
+    const preloadImages = () => {
+      return new Promise((resolve) => {
+        console.log('Starting image preload');
+        const images = document.querySelectorAll('.gallery__item-imginner');
+        console.log('Number of images found:', images.length);
+        
+        imagesLoaded(images, { background: true }, (instance) => {
+          console.log('Images loaded successfully:', instance.images.length);
+          resolve(true);
+        });
+      });
+    };
 
-    // Mouse effects on all links and others
-    [...document.querySelectorAll('a,.gallery__item-img,.gallery__item-number')].forEach(link => {
-      link.addEventListener('mouseenter', () => cursorRef.current?.enter());
-      link.addEventListener('mouseleave', () => cursorRef.current?.leave());
-    });
+    const initializeScrollAndCursor = async () => {
+      try {
+        await preloadImages();
+        
+        console.log('Initializing Locomotive Scroll');
+        const scrollContainer = document.querySelector('[data-scroll-container]');
+        console.log('Scroll container found:', scrollContainer !== null);
+        
+        scrollRef.current = new LocomotiveScroll({
+          el: scrollContainer,
+          smooth: true,
+          direction: 'horizontal',
+          lerp: 0.05,
+          tablet: {
+            smooth: true,
+            direction: 'horizontal',
+            horizontalGesture: true
+          },
+          smartphone: {
+            smooth: true,
+            direction: 'horizontal',
+            horizontalGesture: true
+          }
+        });
 
-    // Preload images
-    Promise.all([preloadImages('.gallery__item-imginner')]).then(() => {
-      document.body.classList.remove('loading');
-    });
+        // Generate random rotations and translations
+        const elems = [...document.querySelectorAll('.gallery__item')];
+        const rotationsArr = Array.from({length: elems.length}, () => randomNumber(-30,30));
+        const translationArr = Array.from({length: elems.length}, () => randomNumber(-100,100));
+
+        scrollRef.current.on('scroll', (obj: any) => {
+          for (const key of Object.keys(obj.currentElements)) {
+            const el = obj.currentElements[key].el;
+            const idx = elems.indexOf(el);
+            if (el.classList.contains('gallery__item')) {
+              let progress = obj.currentElements[key].progress;
+              const rotationVal = progress > 0.6 ? 
+                Math.min(Math.max(((progress - 0.6) / 0.4) * rotationsArr[idx], Math.min(0, rotationsArr[idx])), 
+                Math.max(0, rotationsArr[idx])) : 0;
+              const translationVal = progress > 0.6 ? 
+                Math.min(Math.max(((progress - 0.6) / 0.4) * translationArr[idx], Math.min(0, translationArr[idx])), 
+                Math.max(0, translationArr[idx])) : 0;
+              el.style.transform = `translateY(${translationVal}%) rotate(${rotationVal}deg)`;
+            }
+          }
+        });
+
+        // Force scroll update
+        setTimeout(() => {
+          scrollRef.current.update();
+          console.log('Scroll updated');
+        }, 1000);
+
+        // Initialize custom cursor
+        console.log('Initializing cursor');
+        cursorRef.current = new Cursor(document.querySelector('.cursor'));
+
+        // Mouse effects
+        [...document.querySelectorAll('a,.gallery__item-img,.gallery__item-number')].forEach(link => {
+          link.addEventListener('mouseenter', () => cursorRef.current?.enter());
+          link.addEventListener('mouseleave', () => cursorRef.current?.leave());
+        });
+
+        document.body.classList.remove('loading');
+        console.log('Initialization complete');
+
+      } catch (error) {
+        console.error('Error during initialization:', error);
+        document.body.classList.remove('loading');
+      }
+    };
+
+    initializeScrollAndCursor();
 
     return () => {
-      scrollRef.current?.destroy();
+      if (scrollRef.current) {
+        console.log('Destroying Locomotive Scroll');
+        scrollRef.current.destroy();
+      }
       document.body.classList.remove('loading');
     };
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black text-white">
-      <main data-scroll-container>
+    <div className="relative w-full h-screen overflow-hidden">
+      <main data-scroll-container className="h-full">
         <div className="content">
           <div className="gallery" id="gallery">
             <div className="gallery__text">
               <span className="gallery__text-inner" data-scroll data-scroll-speed="3" data-scroll-direction="vertical">
-                Creative
+                draga
               </span>
               <span data-scroll data-scroll-speed="-4" data-scroll-direction="vertical" className="gallery__text-inner">
-                Works
+                armor
               </span>
             </div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
@@ -53,7 +126,11 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
                 <div className="gallery__item-img">
                   <div 
                     className="gallery__item-imginner" 
-                    style={{ backgroundImage: `url(/src/assets/img/demo4/${num}.jpg)` }}
+                    style={{ 
+                      backgroundImage: `url(src/assets/img/demo4/${14-num}.jpg)`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: '50% 0'
+                    }}
                   />
                 </div>
                 <figcaption className="gallery__item-caption">
@@ -70,10 +147,10 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
             ))}
             <div className="gallery__text">
               <span className="gallery__text-inner" data-scroll data-scroll-speed="-4" data-scroll-direction="vertical">
-                Portfolio
+                Hexed
               </span>
               <span data-scroll data-scroll-speed="3" data-scroll-direction="vertical" className="gallery__text-inner">
-                2025
+                kambu
               </span>
             </div>
           </div>

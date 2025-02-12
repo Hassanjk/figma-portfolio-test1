@@ -60,24 +60,26 @@ function AppContent() {
       visibility: 'visible'
     });
 
-    const observer = Observer.create({
-      target: window,
-      type: 'wheel',
-      onChange: (event) => {
-        if (isAnimating) return;
-        const scrollingDown = event.deltaY > 0;
-        const scrollingUp = event.deltaY < 0;
+    // Only add wheel observer if on view 1
+    let observer: any;
+    if (currentView === 1) {
+      observer = Observer.create({
+        target: window,
+        type: 'wheel',
+        onChange: (event) => {
+          if (isAnimating) return;
+          const scrollingDown = event.deltaY > 0;
+          if (scrollingDown && currentView === 1) {
+            handleViewTransition('down');
+          }
+        },
+        preventDefault: true
+      });
+    }
 
-        if (scrollingDown && currentView === 1) {
-          handleViewTransition('down');
-        } else if (scrollingUp && currentView === 2) {
-          handleViewTransition('up');
-        }
-      },
-      preventDefault: true
-    });
-
-    return () => observer.kill();
+    return () => {
+      if (observer) observer.kill();
+    };
   }, [currentView, isAnimating]);
 
   return (
