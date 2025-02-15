@@ -60,22 +60,26 @@ function AppContent() {
       visibility: 'visible'
     });
 
-    // Only add wheel observer if on view 1
-    let observer: any;
-    if (currentView === 1) {
-      observer = Observer.create({
-        target: window,
-        type: 'wheel',
-        onChange: (event) => {
-          if (isAnimating) return;
-          const scrollingDown = event.deltaY > 0;
-          if (scrollingDown && currentView === 1) {
-            handleViewTransition('down');
-          }
-        },
-        preventDefault: true
-      });
-    }
+    // Observer for both scroll directions
+    const observer = Observer.create({
+      target: window,
+      type: 'wheel',
+      onChange: (event) => {
+        if (isAnimating) return;
+        
+        const scrollingDown = event.deltaY > 0;
+        
+        // Handle scroll down on View 1
+        if (scrollingDown && currentView === 1) {
+          handleViewTransition('down');
+        }
+        // Handle scroll up on View 2
+        else if (!scrollingDown && currentView === 2) {
+          handleViewTransition('up');
+        }
+      },
+      preventDefault: true
+    });
 
     return () => {
       if (observer) observer.kill();
