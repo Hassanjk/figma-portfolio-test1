@@ -3,9 +3,10 @@ import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
 
 interface AboutMeProps {
   onNavigateBack: () => void;
+  onNavigateToContact: () => void;
 }
 
-const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack }, ref) => {
+const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack, onNavigateToContact }, ref) => {
   useEffect(() => {
     // Add parallax effect on mouse move
     const handleMouseMove = (e: MouseEvent) => {
@@ -24,6 +25,15 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  useEffect(() => {
+    // Add auto transition timer
+    const timer = setTimeout(() => {
+      onNavigateToContact();
+    }, 5000); // Wait 5 seconds before transitioning
+
+    return () => clearTimeout(timer);
+  }, [onNavigateToContact]);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#131212] text-white">
@@ -87,10 +97,13 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
         </div>
       </div>
 
-      {/* Footer Quote */}
+      {/* Footer Quote - Modified to include transition hint */}
       <div className="absolute bottom-12 left-0 right-0 text-center" data-parallax="5">
-        <p className="text-xl font-light italic text-gray-400">
+        <p className="text-xl font-light italic text-gray-400 mb-2">
           "Design is not just what it looks like and feels like. Design is how it works."
+        </p>
+        <p className="text-sm text-gray-500 animate-pulse">
+          Transitioning to contact in a few seconds...
         </p>
       </div>
     </div>

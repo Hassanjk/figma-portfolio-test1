@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import personImage from './assets/img/person.png';
 import Projects from './pages/Projects';
 import AboutMe from './pages/AboutMe';
+import Contact from './pages/Contact';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
 
@@ -15,6 +16,7 @@ function AppContent() {
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
   const view3Ref = useRef<HTMLDivElement>(null);
+  const view4Ref = useRef<HTMLDivElement>(null);
 
   const handleViewTransition = (direction: 'up' | 'down', targetView: number) => {
     if (isAnimating) return;
@@ -61,6 +63,24 @@ function AppContent() {
           "<"
         )
         .add(() => setCurrentView(2));
+    } else if (currentView === 3 && targetView === 4) {
+      // About to Contact
+      tl.to(view3Ref.current, { yPercent: -100 })
+        .fromTo(view4Ref.current,
+          { yPercent: 100, visibility: 'visible' },
+          { yPercent: 0 },
+          "<"
+        )
+        .add(() => setCurrentView(4));
+    } else if (currentView === 4 && targetView === 3) {
+      // Contact to About
+      tl.to(view4Ref.current, { yPercent: 100 })
+        .fromTo(view3Ref.current,
+          { yPercent: -100, visibility: 'visible' },
+          { yPercent: 0 },
+          "<"
+        )
+        .add(() => setCurrentView(3));
     }
   };
 
@@ -72,12 +92,13 @@ function AppContent() {
 
   useEffect(() => {
     // Initial setup
-    gsap.set([view1Ref.current, view2Ref.current, view3Ref.current], { 
+    gsap.set([view1Ref.current, view2Ref.current, view3Ref.current, view4Ref.current], { 
       visibility: 'visible' 
     });
     gsap.set(view1Ref.current, { yPercent: currentView === 1 ? 0 : -100 });
     gsap.set(view2Ref.current, { yPercent: currentView === 2 ? 0 : 100 });
     gsap.set(view3Ref.current, { yPercent: currentView === 3 ? 0 : 100 });
+    gsap.set(view4Ref.current, { yPercent: currentView === 4 ? 0 : 100 });
 
     // Observer for scroll transitions - only active when not on view 2 (Projects)
     const observer = Observer.create({
@@ -88,11 +109,13 @@ function AppContent() {
         
         const scrollingDown = event.deltaY > 0;
         
-        // Only handle transitions from view 1 to 2, and view 3 to 2
+        // Updated scroll transition logic
         if (scrollingDown && currentView === 1) {
           handleViewTransition('down', 2);
         } else if (!scrollingDown && currentView === 3) {
           handleViewTransition('up', 2);
+        } else if (!scrollingDown && currentView === 4) {
+          handleViewTransition('up', 3);
         }
       },
       preventDefault: true
@@ -165,7 +188,15 @@ function AppContent() {
 
         {/* View 3 */}
         <div ref={view3Ref} className="view view--3">
-          <AboutMe onNavigateBack={() => handleViewTransition('up', 2)} />
+          <AboutMe 
+            onNavigateBack={() => handleViewTransition('up', 2)}
+            onNavigateToContact={() => handleViewTransition('down', 4)}
+          />
+        </div>
+
+        {/* View 4 */}
+        <div ref={view4Ref} className="view view--4">
+          <Contact onNavigateBack={() => handleViewTransition('up', 3)} />
         </div>
       </div>
     </div>
