@@ -3,8 +3,14 @@ import LocomotiveScroll from 'locomotive-scroll';
 import imagesLoaded from 'imagesloaded';
 import { preloadFonts } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
+import { ArrowUp, ArrowRight } from 'lucide-react'; // Update imports
 
-const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
+interface ProjectsProps {
+  onNavigateBack: () => void;
+  onNavigateToAbout: () => void;
+}
+
+const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBack, onNavigateToAbout }, ref) => {
   const cursorRef = useRef<any>(null);
   const scrollRef = useRef<any>(null);
 
@@ -59,7 +65,7 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
             
             // Handle image inner effects
             if (element.el.classList.contains('gallery__item-imginner')) {
-              let progress = element.progress;
+              const progress = element.progress;
               const saturateVal = progress < 0.5 ? 
                 Math.max(0, Math.min(1, progress * 2)) : 
                 Math.max(0, Math.min(1, (1 - progress) * 2));
@@ -119,13 +125,35 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
       <main data-scroll-container className="h-full">
         <div className="content">
           <div className="gallery" id="gallery">
-            <div className="gallery__text">
-              <span className="gallery__text-inner" data-scroll data-scroll-speed="-4" data-scroll-direction="vertical">
-                Explore
-              </span>
-              <span data-scroll data-scroll-speed="3" data-scroll-direction="vertical" className="gallery__text-inner">
-                now!
-              </span>
+            {/* Replace the first gallery__text div with this */}
+            <div className="navigation-container">
+              <div className="back-arrow-container">
+                <div 
+                  onClick={onNavigateBack}
+                  className="back-arrow"
+                  data-scroll 
+                  data-scroll-speed="-4" 
+                  data-scroll-direction="vertical"
+                >
+                  <ArrowUp />
+                  <div className="rotating-text">
+                    <svg viewBox="0 0 100 100" width="100" height="100">
+                      <defs>
+                        <path id="circle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/>
+                      </defs>
+                      <text>
+                        <textPath href="#circle">
+                          back to main • back to main • 
+                        </textPath>
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="scroll-indicator">
+                <ArrowRight />
+                <span>scroll to explore</span>
+              </div>
             </div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num, idx) => (
               <figure 
@@ -174,13 +202,19 @@ const Projects = React.forwardRef<HTMLDivElement>((props, ref) => {
                 </figcaption>
               </figure>
             ))}
-            <div className="gallery__text">
-              <span className="gallery__text-inner" data-scroll data-scroll-speed="3" data-scroll-direction="vertical">
-                Just
-              </span>
-              <span data-scroll data-scroll-speed="-4" data-scroll-direction="vertical" className="gallery__text-inner">
-                Amazing
-              </span>
+            <div className="about-me-container">
+              <div className="about-me-card"
+                onClick={onNavigateToAbout}
+                data-scroll 
+                data-scroll-speed="2"
+                data-scroll-direction="vertical"
+              >
+                <h3 className="about-me-title">About Me</h3>
+                <p className="about-me-subtitle">Let's work together</p>
+                <div className="about-me-circle">
+                  <ArrowRight />
+                </div>
+              </div>
             </div>
           </div>
         </div>

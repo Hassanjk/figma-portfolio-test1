@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import personImage from './assets/img/person.png';
 import Projects from './pages/Projects';
+import AboutMe from './pages/AboutMe';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
 
@@ -13,69 +14,85 @@ function AppContent() {
   const [isAnimating, setIsAnimating] = useState(false);
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
+  const view3Ref = useRef<HTMLDivElement>(null);
 
-  const handleViewTransition = (direction: 'up' | 'down') => {
+  const handleViewTransition = (direction: 'up' | 'down', targetView: number) => {
     if (isAnimating) return;
     setIsAnimating(true);
 
     const tl = gsap.timeline({
-      defaults: {
-        duration: 1.5,
-        ease: "power2.inOut"
-      },
+      defaults: { duration: 1.5, ease: "power2.inOut" },
       onComplete: () => setIsAnimating(false)
     });
 
-    if (direction === 'down' && currentView === 1) {
-      tl.to(view1Ref.current, { 
-        yPercent: -100,
-      })
-      .fromTo(view2Ref.current, 
-        { yPercent: 100, visibility: 'visible' },
-        { yPercent: 0 },
-        "<"
-      )
-      .add(() => setCurrentView(2));
-    } else if (direction === 'up' && currentView === 2) {
-      tl.to(view2Ref.current, { 
-        yPercent: 100,
-      })
-      .fromTo(view1Ref.current,
-        { yPercent: -100, visibility: 'visible' },
-        { yPercent: 0 },
-        "<"
-      )
-      .add(() => setCurrentView(1));
+    if (currentView === 1 && targetView === 2) {
+      // Home to Projects
+      tl.to(view1Ref.current, { yPercent: -100 })
+        .fromTo(view2Ref.current, 
+          { yPercent: 100, visibility: 'visible' },
+          { yPercent: 0 },
+          "<"
+        )
+        .add(() => setCurrentView(2));
+    } else if (currentView === 2 && targetView === 1) {
+      // Projects to Home
+      tl.to(view2Ref.current, { yPercent: 100 })
+        .fromTo(view1Ref.current,
+          { yPercent: -100, visibility: 'visible' },
+          { yPercent: 0 },
+          "<"
+        )
+        .add(() => setCurrentView(1));
+    } else if (currentView === 2 && targetView === 3) {
+      // Projects to About
+      tl.to(view2Ref.current, { yPercent: -100 })
+        .fromTo(view3Ref.current,
+          { yPercent: 100, visibility: 'visible' },
+          { yPercent: 0 },
+          "<"
+        )
+        .add(() => setCurrentView(3));
+    } else if (currentView === 3 && targetView === 2) {
+      // About to Projects
+      tl.to(view3Ref.current, { yPercent: 100 })
+        .fromTo(view2Ref.current,
+          { yPercent: -100, visibility: 'visible' },
+          { yPercent: 0 },
+          "<"
+        )
+        .add(() => setCurrentView(2));
+    }
+  };
+
+  const handleButtonNavigation = () => {
+    if (currentView === 2) {
+      handleViewTransition('up', 1);
     }
   };
 
   useEffect(() => {
     // Initial setup
-    gsap.set(view1Ref.current, { 
-      yPercent: currentView === 1 ? 0 : -100,
-      visibility: 'visible'
+    gsap.set([view1Ref.current, view2Ref.current, view3Ref.current], { 
+      visibility: 'visible' 
     });
-    gsap.set(view2Ref.current, { 
-      yPercent: currentView === 2 ? 0 : 100,
-      visibility: 'visible'
-    });
+    gsap.set(view1Ref.current, { yPercent: currentView === 1 ? 0 : -100 });
+    gsap.set(view2Ref.current, { yPercent: currentView === 2 ? 0 : 100 });
+    gsap.set(view3Ref.current, { yPercent: currentView === 3 ? 0 : 100 });
 
-    // Observer for both scroll directions
+    // Observer for scroll transitions - only active when not on view 2 (Projects)
     const observer = Observer.create({
       target: window,
       type: 'wheel',
       onChange: (event) => {
-        if (isAnimating) return;
+        if (isAnimating || currentView === 2) return; // Prevent scroll transitions on view 2
         
         const scrollingDown = event.deltaY > 0;
         
-        // Handle scroll down on View 1
+        // Only handle transitions from view 1 to 2, and view 3 to 2
         if (scrollingDown && currentView === 1) {
-          handleViewTransition('down');
-        }
-        // Handle scroll up on View 2
-        else if (!scrollingDown && currentView === 2) {
-          handleViewTransition('up');
+          handleViewTransition('down', 2);
+        } else if (!scrollingDown && currentView === 3) {
+          handleViewTransition('up', 2);
         }
       },
       preventDefault: true
@@ -140,7 +157,15 @@ function AppContent() {
 
         {/* View 2 */}
         <div ref={view2Ref} className="view view--2">
-          <Projects />
+          <Projects 
+            onNavigateBack={() => handleViewTransition('up', 1)}
+            onNavigateToAbout={() => handleViewTransition('down', 3)}
+          />
+        </div>
+
+        {/* View 3 */}
+        <div ref={view3Ref} className="view view--3">
+          <AboutMe onNavigateBack={() => handleViewTransition('up', 2)} />
         </div>
       </div>
     </div>
