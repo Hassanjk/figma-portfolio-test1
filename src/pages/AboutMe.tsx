@@ -22,18 +22,23 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
       });
     };
 
+    // Add scroll handler for transitioning to contact
+    const handleScroll = (e: WheelEvent) => {
+      if (e.deltaY > 0) { // Scrolling down
+        onNavigateToContact();
+      } else if (e.deltaY < 0) { // Scrolling up
+        onNavigateBack();
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    // Add auto transition timer
-    const timer = setTimeout(() => {
-      onNavigateToContact();
-    }, 5000); // Wait 5 seconds before transitioning
-
-    return () => clearTimeout(timer);
-  }, [onNavigateToContact]);
+    window.addEventListener('wheel', handleScroll);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('wheel', handleScroll);
+    };
+  }, [onNavigateToContact, onNavigateBack]);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#131212] text-white">
@@ -97,13 +102,10 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
         </div>
       </div>
 
-      {/* Footer Quote - Modified to include transition hint */}
+      {/* Footer Quote */}
       <div className="absolute bottom-12 left-0 right-0 text-center" data-parallax="5">
-        <p className="text-xl font-light italic text-gray-400 mb-2">
+        <p className="text-xl font-light italic text-gray-400">
           "Design is not just what it looks like and feels like. Design is how it works."
-        </p>
-        <p className="text-sm text-gray-500 animate-pulse">
-          Transitioning to contact in a few seconds...
         </p>
       </div>
     </div>

@@ -20,6 +20,13 @@ function AppContent() {
 
   const handleViewTransition = (direction: 'up' | 'down', targetView: number) => {
     if (isAnimating) return;
+    
+    // Prevent invalid transitions
+    if (currentView === 1 && targetView !== 2) return;
+    if (currentView === 2 && targetView !== 1 && targetView !== 3) return;
+    if (currentView === 3 && targetView !== 2 && targetView !== 4) return;
+    if (currentView === 4 && targetView !== 3) return;
+
     setIsAnimating(true);
 
     const tl = gsap.timeline({
