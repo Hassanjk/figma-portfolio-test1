@@ -5,14 +5,15 @@ import personImage from './assets/img/person.png';
 import Projects from './pages/Projects';
 import AboutMe from './pages/AboutMe';
 import Contact from './pages/Contact';
+import NavigationMenu from './components/NavigationMenu';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
+import { useScrollStore } from './store/useScrollStore';
 
 gsap.registerPlugin(Observer);
 
 function AppContent() {
-  const [currentView, setCurrentView] = useState(1);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const { currentView, setCurrentView, isAnimating, setIsAnimating } = useScrollStore();
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
   const view3Ref = useRef<HTMLDivElement>(null);
@@ -135,19 +136,8 @@ function AppContent() {
 
   return (
     <div className="bg-black min-h-screen text-white overflow-hidden">
-      {/* Navigation */}
-      <nav className="fixed w-full p-6 flex justify-between items-center z-50">
-        <div className="text-2xl font-bold">Hof.</div>
-        <div className="hidden md:flex gap-8 items-center">
-          <button className="hover:text-gray-300">Home</button>
-          <button className="hover:text-gray-300">Projects</button>
-          <a href="#about" className="hover:text-gray-300">About</a>
-          <a href="#blog" className="hover:text-gray-300">Blog</a>
-          <button className="border border-white px-4 py-2 hover:bg-white hover:text-black transition-colors">
-            Hire me
-          </button>
-        </div>
-      </nav>
+      {/* Navigation Menu */}
+      <NavigationMenu onNavigate={(view) => handleViewTransition(view > currentView ? 'down' : 'up', view)} />
 
       {/* Views Container */}
       <div className="relative w-full h-screen overflow-hidden">

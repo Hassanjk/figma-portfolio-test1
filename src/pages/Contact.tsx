@@ -34,7 +34,7 @@ const Contact = React.forwardRef<HTMLDivElement, ContactProps>(({ onNavigateBack
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 relative z-10">
+      <div className="container mx-auto px-4 pl-32 py-12 relative z-10">
         <div className="max-w-6xl mx-auto">
           <h1 className="hero-title text-7xl md:text-8xl mb-8" data-parallax="10">
             Let's Connect
