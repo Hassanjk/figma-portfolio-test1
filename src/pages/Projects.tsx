@@ -116,8 +116,7 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
 
   const projectTitles = [
     'Funambulist', 'Omophagy', 'Conniption', 'Xenology', 
-    'Lycanthropy', 'Mudlark', 'Illywhacker', 'Disenthral',
-    'Abaya', 'Hallux', 'Lablab', 'Momisom'
+    'Lycanthropy', 'Mudlark', 'Illywhacker', 'Disenthral'
   ];
 
   return (
@@ -155,7 +154,7 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
                 <span>scroll to explore</span>
               </div>
             </div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num, idx) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((num, idx) => (
               <figure 
                 key={num} 
                 className="gallery__item" 
