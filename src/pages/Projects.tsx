@@ -8,9 +8,10 @@ import { ArrowUp, ArrowRight } from 'lucide-react'; // Update imports
 interface ProjectsProps {
   onNavigateBack: () => void;
   onNavigateToAbout: () => void;
+  onSelectProject: (projectId: number) => void; // Add this prop
 }
 
-const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBack, onNavigateToAbout }, ref) => {
+const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBack, onNavigateToAbout, onSelectProject }, ref) => {
   const cursorRef = useRef<any>(null);
   const scrollRef = useRef<any>(null);
 
@@ -197,7 +198,13 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
                     <span>#creative</span>
                     <span>#development</span>
                   </p>
-                  <a className="gallery__item-link">explore</a>
+                  <a 
+                    className="gallery__item-link" 
+                    onClick={() => onSelectProject(num)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    explore
+                  </a>
                 </figcaption>
               </figure>
             ))}

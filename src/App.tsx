@@ -5,19 +5,23 @@ import personImage from './assets/img/person.png';
 import Projects from './pages/Projects';
 import AboutMe from './pages/AboutMe';
 import Contact from './pages/Contact';
+import SingleProject from './pages/SingleProject'; // Import the SingleProject component
 import NavigationMenu from './components/NavigationMenu';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
 import { useScrollStore } from './store/useScrollStore';
+import './styles/singleProject.css'; // Import single project styles
 
 gsap.registerPlugin(Observer);
 
 function AppContent() {
   const { currentView, setCurrentView, isAnimating, setIsAnimating } = useScrollStore();
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null); // Add this state
   const view1Ref = useRef<HTMLDivElement>(null);
   const view2Ref = useRef<HTMLDivElement>(null);
   const view3Ref = useRef<HTMLDivElement>(null);
   const view4Ref = useRef<HTMLDivElement>(null);
+  const projectViewRef = useRef<HTMLDivElement>(null); // Add this ref
 
   const handleViewTransition = (direction: 'up' | 'down', targetView: number) => {
     if (isAnimating) return;
@@ -90,6 +94,44 @@ function AppContent() {
         )
         .add(() => setCurrentView(3));
     }
+  };
+
+  // Add this function to handle project selection
+  const handleProjectSelect = (projectId: number) => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    setSelectedProjectId(projectId);
+
+    // Animate the project view in
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: "power2.inOut" },
+      onComplete: () => setIsAnimating(false)
+    });
+
+    tl.set(projectViewRef.current, { visibility: 'visible', zIndex: 100 })
+      .fromTo(projectViewRef.current, 
+        { xPercent: 100 },
+        { xPercent: 0 }
+      );
+  };
+
+  // Add this function to handle returning from project detail
+  const handleReturnFromProject = () => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: "power2.inOut" },
+      onComplete: () => {
+        setIsAnimating(false);
+        setSelectedProjectId(null);
+      }
+    });
+
+    tl.to(projectViewRef.current, { xPercent: 100 })
+      .set(projectViewRef.current, { visibility: 'hidden', zIndex: -1 });
   };
 
   const handleButtonNavigation = () => {
@@ -180,6 +222,7 @@ function AppContent() {
           <Projects 
             onNavigateBack={() => handleViewTransition('up', 1)}
             onNavigateToAbout={() => handleViewTransition('down', 3)}
+            onSelectProject={handleProjectSelect} // Add this prop
           />
         </div>
 
@@ -194,6 +237,28 @@ function AppContent() {
         {/* View 4 */}
         <div ref={view4Ref} className="view view--4">
           <Contact onNavigateBack={() => handleViewTransition('up', 3)} />
+        </div>
+
+        {/* Project Detail View */}
+        <div 
+          ref={projectViewRef} 
+          className="view project-view"
+          style={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            height: '100%', 
+            visibility: 'hidden',
+            zIndex: -1
+          }}
+        >
+          {selectedProjectId !== null && (
+            <SingleProject 
+              projectId={selectedProjectId}
+              onNavigateBack={handleReturnFromProject}
+            />
+          )}
         </div>
       </div>
     </div>
