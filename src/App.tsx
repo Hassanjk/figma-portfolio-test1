@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import personImage from './assets/img/person.png';
 import Projects from './pages/Projects';
 import AboutMe from './pages/AboutMe';
 import Contact from './pages/Contact';
@@ -189,7 +188,7 @@ function AppContent() {
             {/* Image Container */}
             <div className="absolute inset-0 md:right-0 md:w-1/2 h-full">
               <img 
-                src={personImage}
+                src="/assets/img/person.png"
                 alt="Designer"
                 className="w-full h-full object-cover opacity-50 md:opacity-100"
               />
