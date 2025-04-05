@@ -3,12 +3,12 @@ import LocomotiveScroll from 'locomotive-scroll';
 import imagesLoaded from 'imagesloaded';
 import { preloadFonts } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
-import { ArrowUp, ArrowRight } from 'lucide-react'; // Update imports
+import { ArrowUp, ArrowRight } from 'lucide-react';
 
 interface ProjectsProps {
   onNavigateBack: () => void;
   onNavigateToAbout: () => void;
-  onSelectProject: (projectId: number) => void; // Add this prop
+  onSelectProject: (projectId: number) => void;
 }
 
 const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBack, onNavigateToAbout, onSelectProject }, ref) => {
@@ -34,7 +34,6 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
 
     const initializeScrollAndCursor = async () => {
       try {
-        // Wait for both images and fonts to load
         await Promise.all([preloadImages(), preloadFonts()]);
         
         console.log('Initializing Locomotive Scroll');
@@ -59,12 +58,10 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
           }
         });
 
-        // Add scroll event for image effects and vertical transitions
         scrollRef.current.on('scroll', (obj: any) => {
           for (const key of Object.keys(obj.currentElements)) {
             const element = obj.currentElements[key];
             
-            // Handle image inner effects
             if (element.el.classList.contains('gallery__item-imginner')) {
               const progress = element.progress;
               const saturateVal = progress < 0.5 ? 
@@ -79,17 +76,13 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
           }
         });
 
-        // Force scroll update
         setTimeout(() => {
           scrollRef.current.update();
           console.log('Scroll updated');
         }, 1000);
 
-        // Initialize custom cursor
-        console.log('Initializing cursor');
         cursorRef.current = new Cursor(document.querySelector('.cursor'));
 
-        // Mouse effects
         [...document.querySelectorAll('a,.gallery__item-img,.gallery__item-number')].forEach(link => {
           link.addEventListener('mouseenter', () => cursorRef.current?.enter());
           link.addEventListener('mouseleave', () => cursorRef.current?.leave());
@@ -125,7 +118,6 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
       <main data-scroll-container className="h-full">
         <div className="content">
           <div className="gallery" id="gallery">
-            {/* Replace the first gallery__text div with this */}
             <div className="navigation-container">
               <div className="back-arrow-container">
                 <div 
@@ -170,7 +162,7 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
                     data-scroll-speed="1" 
                     data-scroll-direction="vertical"
                     style={{ 
-                      backgroundImage: `url(public/assets/img/demo1/${num}.jpg)`,
+                      backgroundImage: `url(/assets/img/demo1/${num}.jpg)`,
                       backgroundSize: 'cover',
                       backgroundPosition: '50% 25%'
                     }}

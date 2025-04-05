@@ -14,7 +14,6 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
   const cursorRef = useRef<any>(null);
   const scrollRef = useRef<any>(null);
 
-  // Project data based on the project ID
   const projectData = {
     id: projectId,
     title: ['Funambulist', 'Omophagy', 'Conniption', 'Xenology', 
@@ -23,11 +22,11 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
     year: `202${projectId}`,
     client: "Studio Digital",
     services: ["UX Design", "Development", "Branding"],
-    mainImage: `public/assets/img/demo1/${projectId}.jpg`,
+    mainImage: `/assets/img/demo1/${projectId}.jpg`,
     gallery: [
-      `public/assets/img/demo1/${projectId}.jpg`,
-      `public/assets/img/demo1/${projectId === 8 ? 1 : projectId + 1}.jpg`,
-      `public/assets/img/demo1/${projectId <= 2 ? 8 - (2 - projectId) : projectId - 2}.jpg`
+      `/assets/img/demo1/${projectId}.jpg`,
+      `/assets/img/demo1/${projectId === 8 ? 1 : projectId + 1}.jpg`,
+      `/assets/img/demo1/${projectId <= 2 ? 8 - (2 - projectId) : projectId - 2}.jpg`
     ]
   };
 
@@ -45,7 +44,6 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
 
     const initializeScrollAndCursor = async () => {
       try {
-        // Wait for both images and fonts to load
         await Promise.all([preloadImages(), preloadFonts()]);
         
         const scrollContainer = document.querySelector('[data-scroll-container]');
@@ -57,10 +55,8 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
           lerp: 0.1
         });
 
-        // Initialize custom cursor
         cursorRef.current = new Cursor(document.querySelector('.cursor'));
 
-        // Mouse hover effects
         [...document.querySelectorAll('a, button, .project-link')].forEach(link => {
           link.addEventListener('mouseenter', () => cursorRef.current?.enter());
           link.addEventListener('mouseleave', () => cursorRef.current?.leave());
@@ -97,7 +93,6 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
       </div>
 
       <main data-scroll-container className="h-full">
-        {/* Hero Section */}
         <section 
           className="hero-section h-screen relative flex items-center"
           data-scroll-section
@@ -130,7 +125,6 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
           </div>
         </section>
 
-        {/* Project Info Section */}
         <section 
           className="project-info py-32 bg-zinc-900"
           data-scroll-section
@@ -193,7 +187,6 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
           </div>
         </section>
 
-        {/* Gallery Section */}
         <section 
           className="project-gallery py-32 bg-black"
           data-scroll-section
@@ -229,7 +222,6 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
           </div>
         </section>
 
-        {/* Next Project Section */}
         <section 
           className="next-project-section py-32 bg-zinc-900"
           data-scroll-section
@@ -244,7 +236,7 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
             </h2>
             <div 
               className="project-link cursor-pointer inline-flex items-center justify-center gap-4"
-              onClick={onNavigateBack} // This would navigate to next project in a real implementation
+              onClick={onNavigateBack}
               data-scroll
               data-scroll-speed="1"
             >
