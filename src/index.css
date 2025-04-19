@@ -110,9 +110,9 @@ body {
   font-style: normal;
   color: #f0ecec;
   align-self: center;
-  font-family: 'Unbounded', sans-serif; /* Changed from moret to Unbounded */
-  letter-spacing: -0.03em; /* Added to match main title */
-  line-height: 0.95; /* Added to match main title */
+  font-family: 'Unbounded', sans-serif;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
   will-change: transform;
   transform-origin: center center;
 }
@@ -123,10 +123,10 @@ body {
   justify-self: end;
   padding-right: 2rem;
   color: #d1d1d1;
-  font-family: 'Unbounded', sans-serif; /* Changed from moret to Unbounded */
+  font-family: 'Unbounded', sans-serif;
   font-weight: 200;
   font-style: normal;
-  letter-spacing: -0.03em; /* Added to match main title */
+  letter-spacing: -0.03em;
   will-change: transform;
   transform-origin: center center;
 }
@@ -146,7 +146,7 @@ body {
   grid-area: gallery-link;
   align-self: end;
   font-size: 1.5rem;
-  background: #2a2a2a; /* Changed from #d75828 to match the arrow color */
+  background: #2a2a2a;
   color: #fff;
   text-decoration: underline;
   width: 120px;
@@ -161,7 +161,7 @@ body {
 }
 
 .gallery__item-link:hover {
-  background: #3d3d3d; /* Changed from #d4b77d to match the arrow hover color */
+  background: #3d3d3d;
   color: #fff;
   text-decoration: none;
   transform: scale(1.05);
@@ -300,6 +300,69 @@ html.has-scroll-dragging {
   font-weight: 300;
 }
 
+/* Contact Page Mobile Styles */
+@media (max-width: 768px) {
+  .view--4 {
+    padding: 1rem;
+  }
+
+  .view--4 .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .view--4 .hero-title {
+    font-size: 3rem !important;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .view--4 .grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .view--4 .space-y-6 > div {
+    margin-bottom: 1rem;
+  }
+
+  .view--4 input,
+  .view--4 textarea {
+    font-size: 1rem;
+    padding: 0.75rem 0;
+  }
+
+  .view--4 .space-y-8 {
+    margin-top: 2rem;
+  }
+
+  .view--4 .flex.items-start {
+    margin-bottom: 1.5rem;
+  }
+
+  .view--4 .text-xl {
+    font-size: 1.125rem;
+  }
+
+  .view--4 .text-gray-400 {
+    font-size: 0.875rem;
+  }
+
+  .view--4 button {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .view--4 .space-y-4 {
+    margin-top: 2rem;
+  }
+
+  .view--4 .flex.gap-6 {
+    justify-content: center;
+  }
+}
+
 /* Add these new styles before the end of the file */
 .back-arrow-container {
   position: relative;
@@ -308,8 +371,8 @@ html.has-scroll-dragging {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: auto; /* Push to top */
-  margin-top: 5vh; /* Changed from 20vh to 10vh to push it more to the top */
+  margin-bottom: auto;
+  margin-top: 5vh;
 }
 
 .back-arrow {
@@ -354,7 +417,7 @@ html.has-scroll-dragging {
 }
 
 .rotating-text text {
-  fill: #ffffff; /* Changed from #2a2a2a to white */
+  fill: #ffffff;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -369,34 +432,32 @@ html.has-scroll-dragging {
   }
 }
 
-/* Update hover effect for the text */
 .back-arrow:hover + .rotating-text text {
-  fill: rgba(255, 255, 255, 0.8); /* Changed to semi-transparent white for subtle hover */
+  fill: rgba(255, 255, 255, 0.8);
 }
 
-/* Add these new styles */
 .navigation-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4rem; /* Increased gap between elements */
+  gap: 4rem;
   margin: 0 5vw;
   min-width: 200px;
-  min-height: 100vh; /* Make it full height */
-  position: relative; /* Add this */
+  min-height: 100vh;
+  position: relative;
 }
 
 .scroll-indicator {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #ffffff; /* Changed from #2a2a2a to white */
+  color: #ffffff;
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-top: auto; /* Push to bottom */
-  margin-bottom: 20vh; /* Add some bottom margin */
+  margin-top: auto;
+  margin-bottom: 20vh;
 }
 
 .scroll-indicator svg {
