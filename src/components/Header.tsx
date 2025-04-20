@@ -35,8 +35,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
     <>
       <header className="sticky-header fixed top-0 left-0 w-full z-50 px-12 py-6 flex justify-between items-center">
         <div className="logo flex items-center">
-          <span className="text-[#4B4DED] text-2xl font-bold">MICA</span>
-          <span className="text-[#4B4DED] text-2xl">EL</span>
+          <span className="text-[#9C27B0] text-2xl font-bold">MICA</span>
+          <span className="text-[#9C27B0] text-2xl">EL</span>
         </div>
         
         <button 
@@ -45,9 +45,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           aria-label="Toggle Menu"
         >
           <div className="flex flex-col justify-between w-6 h-5">
-            <span className={`h-0.5 w-full bg-[#4B4DED] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-            <span className={`h-0.5 w-full bg-[#4B4DED] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}></span>
-            <span className={`h-0.5 w-full bg-[#4B4DED] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+            <span className={`h-0.5 w-full bg-[#9C27B0] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`h-0.5 w-full bg-[#9C27B0] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`h-0.5 w-full bg-[#9C27B0] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
           </div>
         </button>
         
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           {[1, 2, 3, 4].map((dot) => (
             <div 
               key={dot} 
-              className={`w-2 h-2 rounded-full transition-colors duration-300 ${dot === currentView ? 'bg-[#4B4DED]' : 'bg-gray-300'}`}
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${dot === currentView ? 'bg-[#9C27B0]' : 'bg-gray-300'}`}
             ></div>
           ))}
         </div>
