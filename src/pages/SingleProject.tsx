@@ -126,72 +126,68 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
         </section>
 
         <section 
-          className="project-info py-32 bg-zinc-900"
-          data-scroll-section
-        >
-          <div className="container mx-auto px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-              <div className="md:col-span-2">
-                <h2 
-                  className="text-3xl font-bold mb-8"
-                  data-scroll
-                  data-scroll-speed="1"
-                >
-                  About the Project
-                </h2>
-                <div 
-                  className="space-y-6"
-                  data-scroll
-                  data-scroll-speed="0.5"
-                >
-                  <p className="text-lg text-white/80">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod 
-                    metus ac neque pharetra, sit amet efficitur nisl tempus. Nulla facilisi. 
-                    Praesent tincidunt libero vel facilisis efficitur.
-                  </p>
-                  <p className="text-lg text-white/80">
-                    Sed vehicula, ipsum vel egestas pretium, velit lorem ultrices ex, 
-                    eget luctus nibh sem et nisl. Cras at varius sem. Sed ut libero ac 
-                    arcu ultricies venenatis ut at nulla.
-                  </p>
-                  <a href="#" className="inline-flex items-center gap-2 text-yellow-400 hover:underline">
-                    <span>Visit live project</span>
-                    <ExternalLink size={18} />
-                  </a>
-                </div>
-              </div>
-
-              <div 
-                className="project-meta border-l border-white/20 pl-8"
-                data-scroll
-                data-scroll-speed="1.5"
-              >
-                <div className="mb-8">
-                  <h3 className="text-white/60 text-sm mb-2">Year</h3>
-                  <p className="text-xl">{projectData.year}</p>
-                </div>
-                <div className="mb-8">
-                  <h3 className="text-white/60 text-sm mb-2">Client</h3>
-                  <p className="text-xl">{projectData.client}</p>
-                </div>
-                <div>
-                  <h3 className="text-white/60 text-sm mb-2">Services</h3>
-                  <ul className="space-y-1">
-                    {projectData.services.map((service, index) => (
-                      <li key={index} className="text-lg">{service}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section 
           className="project-gallery py-32 bg-black"
           data-scroll-section
         >
           <div className="container mx-auto px-8">
+            {/* Project Info Content Integrated with Gallery */}
+            <div className="mb-32">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div className="md:col-span-2">
+                  <h2 
+                    className="text-3xl font-bold mb-8"
+                    data-scroll
+                    data-scroll-speed="1"
+                  >
+                    About the Project
+                  </h2>
+                  <div 
+                    className="space-y-6"
+                    data-scroll
+                    data-scroll-speed="0.5"
+                  >
+                    <p className="text-lg text-white/80">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod 
+                      metus ac neque pharetra, sit amet efficitur nisl tempus. Nulla facilisi. 
+                      Praesent tincidunt libero vel facilisis efficitur.
+                    </p>
+                    <p className="text-lg text-white/80">
+                      Sed vehicula, ipsum vel egestas pretium, velit lorem ultrices ex, 
+                      eget luctus nibh sem et nisl. Cras at varius sem. Sed ut libero ac 
+                      arcu ultricies venenatis ut at nulla.
+                    </p>
+                    <a href="#" className="inline-flex items-center gap-2 text-yellow-400 hover:underline">
+                      <span>Visit live project</span>
+                      <ExternalLink size={18} />
+                    </a>
+                  </div>
+                </div>
+
+                <div 
+                  className="project-meta border-l border-white/20 pl-8"
+                  data-scroll
+                  data-scroll-speed="1.5"
+                >
+                  <div className="mb-8">
+                    <h3 className="text-white/60 text-sm mb-2">Year</h3>
+                    <p className="text-xl">{projectData.year}</p>
+                  </div>
+                  <div className="mb-8">
+                    <h3 className="text-white/60 text-sm mb-2">Client</h3>
+                    <p className="text-xl">{projectData.client}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-white/60 text-sm mb-2">Services</h3>
+                    <ul className="space-y-1">
+                      {projectData.services.map((service, index) => (
+                        <li key={index} className="text-lg">{service}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <h2 
               className="text-3xl font-bold mb-16"
               data-scroll
