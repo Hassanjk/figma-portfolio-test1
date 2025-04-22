@@ -539,3 +539,32 @@ html.has-scroll-dragging {
   height: 24px;
   color: white;
 }
+
+/* Hide skills category on shorter height devices */
+@media screen and (max-height: 1000px) and (max-width: 500px) {
+  .gallery__item-link{
+    display: none !important;
+  }
+  .navigation-container{
+    display: none !important;
+  }
+  .trim-skill {
+    display: none !important;
+  }
+ .move-buttom-20px
+ {
+    margin-top: 88px !important;
+ }
+}
+
+/* Hide skills category on shorter height devices */
+@media screen and (max-height: 800px) and (max-width: 500px) {
+  .trim-education {
+    display: none !important;
+  }
+ .move-buttom-20px
+ {
+    margin-top: 88px !important;
+ }
+}
+

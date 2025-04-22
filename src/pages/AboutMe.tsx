@@ -49,7 +49,7 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pt-12 relative z-10">
+      <div className="container mx-auto px-4 pt-12 relative z-10 move-buttom-20px">
         <div className="max-w-4xl mx-auto">
           <h1 className="hero-title text-7xl md:text-8xl mb-12" data-parallax="10">
             About Me
@@ -61,7 +61,7 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
                 A passionate digital product designer focused on creating intuitive and impactful user experiences. With expertise in UI/UX design, interaction design, and front-end development.
               </p>
               
-              <div className="space-y-4">
+              <div className="space-y-4 trim-education">
                 <h3 className="text-2xl font-semibold font-unbounded">Experience</h3>
                 <div className="space-y-4 text-gray-300">
                   <div>
@@ -76,7 +76,7 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
               </div>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-8 trim-skill">
               <div className="space-y-4">
                 <h3 className="text-2xl font-semibold font-unbounded">Skills</h3>
                 <div className="flex flex-wrap gap-3">
