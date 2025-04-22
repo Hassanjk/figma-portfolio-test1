@@ -86,7 +86,7 @@ const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ isOpen, onClose }) => {
     >
       <div 
         ref={menuBgRef} 
-        className="absolute inset-0 bg-[#9C27B0]"
+        className="absolute inset-0 bg-[#131212]"
         style={{ clipPath: "circle(0% at top right)" }}
       >
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-white opacity-5"></div>
@@ -129,13 +129,13 @@ const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ isOpen, onClose }) => {
         
         <div className="mt-20">
           <div className="flex items-center gap-8 justify-center">
-            <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#9C27B0] transition-colors">
+            <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#131212] transition-colors">
               <span>FB</span>
             </a>
-            <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#9C27B0] transition-colors">
+            <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#131212] transition-colors">
               <span>TW</span>
             </a>
-            <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#9C27B0] transition-colors">
+            <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#131212] transition-colors">
               <span>IG</span>
             </a>
           </div>
