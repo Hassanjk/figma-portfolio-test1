@@ -155,7 +155,11 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
                 data-scroll-speed={idx % 2 === 0 ? "2" : "-2"} 
                 data-scroll-direction="vertical"
               >
-                <div className="gallery__item-img">
+                <div 
+                  className="gallery__item-img"
+                  onClick={() => onSelectProject(num)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div 
                     className="gallery__item-imginner" 
                     data-scroll 
