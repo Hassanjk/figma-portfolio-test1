@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { X, Facebook, Twitter, Instagram } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useScrollStore } from '../store/useScrollStore';
 
@@ -130,13 +130,13 @@ const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ isOpen, onClose }) => {
         <div className="mt-20">
           <div className="flex items-center gap-8 justify-center">
             <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#131212] transition-colors">
-              <span>FB</span>
+              <Facebook size={18} />
             </a>
             <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#131212] transition-colors">
-              <span>TW</span>
+              <Twitter size={18} />
             </a>
             <a href="#" className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-[#131212] transition-colors">
-              <span>IG</span>
+              <Instagram size={18} />
             </a>
           </div>
         </div>
