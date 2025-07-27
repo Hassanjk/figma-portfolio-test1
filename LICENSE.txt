@@ -1,0 +1,37 @@
+REGULAR LICENSE
+
+This Regular License grants you an ongoing, non-exclusive, worldwide license to make use of the digital work (Item) you have selected, on the following terms:
+
+1. You are licensed to use the Item to create one single End Product for yourself or for one client (a "single application"), and the End Product can be distributed for Free.
+
+2. An End Product is one of the following things, both requiring an application of skill and effort:
+   - For an Item that is a template, the End Product is a customized implementation of the Item
+   - For other types of Item, the End Product is something incorporating the Item as well as other things, so that it is larger in scope and different in nature than the Item
+
+3. You can create one End Product for a client, and you can transfer that single End Product to your client for any fee. This license is then transferred to your client.
+
+4. You can make any number of copies of the single End Product, as long as the End Product is distributed for Free.
+
+5. You can modify or manipulate the Item. You can combine the Item with other works and make a derivative work from it. The resulting works are subject to the terms of this license. You can do these things as long as the End Product you then create is one that's permitted under clause 2.
+
+6. You can't redistribute the Item as stock, in a tool or template, or with source files. You can't do this with an Item either on its own or bundled with other items, and even if you modify the Item. You can't redistribute or make available the Item as-is or with superficial modifications.
+
+7. You can't use the Item in any application allowing an end user to customize a digital or physical product to their specific needs, such as an "on demand", "made to order" or "build it yourself" application.
+
+8. You must not permit an end user of the End Product to extract the Item and use it separately from the End Product.
+
+9. You can't use an Item in a logo, trademark, or service mark.
+
+10. For some Items, a component of the Item will be sourced by the author from elsewhere and different license terms may apply to the component, such as someone else's license or an open source or creative commons license. If so, the component will be identified by the author in the Item's description page or in the Item's downloaded files. The other license will apply to that component instead of this license. This license will apply to the rest of the Item.
+
+EXTENDED LICENSE
+
+This Extended License grants you the same rights as the Regular License, plus:
+
+1. You can use the Item to create unlimited End Products for sale. There's no limit on the number of End Products you can create.
+
+2. You can sell the End Products to your clients or on marketplaces.
+
+3. The End Products can be sold for any fee.
+
+For more details about licenses, visit: https://themeforest.net/licenses
