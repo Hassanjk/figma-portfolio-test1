@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
 import imagesLoaded from 'imagesloaded';
 import { preloadFonts } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
-import { ArrowUp, ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useScrollStore } from '../store/useScrollStore';
 
 interface ProjectsProps {
   onNavigateBack: () => void;
@@ -14,10 +15,27 @@ interface ProjectsProps {
 const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBack, onNavigateToAbout, onSelectProject }, ref) => {
   const cursorRef = useRef<any>(null);
   const scrollRef = useRef<any>(null);
+  
+  // Use refs for callbacks to avoid stale closures
+  const onNavigateBackRef = useRef(onNavigateBack);
+  const onNavigateToAboutRef = useRef(onNavigateToAbout);
+  
+  useEffect(() => {
+    onNavigateBackRef.current = onNavigateBack;
+    onNavigateToAboutRef.current = onNavigateToAbout;
+  }, [onNavigateBack, onNavigateToAbout]);
 
   useEffect(() => {
     console.log('Initializing Projects component');
     document.body.classList.add('loading');
+
+    // Scroll boundary detection state
+    let scrollX = 0;
+    let scrollMaxX = 0;
+    let overScrollDelta = 0;
+    const TRIGGER_THRESHOLD = 200;
+    let resetTimer: ReturnType<typeof setTimeout> | null = null;
+    let scrollReady = false;
 
     const preloadImages = () => {
       return new Promise((resolve) => {
@@ -30,6 +48,44 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
           resolve(true);
         });
       });
+    };
+
+    // Wheel handler for boundary detection
+    const handleBoundaryWheel = (e: WheelEvent) => {
+      const { isAnimating } = useScrollStore.getState();
+      if (isAnimating || !scrollReady) {
+        overScrollDelta = 0;
+        return;
+      }
+
+      const nearStart = scrollX <= 30;
+      const nearEnd = scrollMaxX > 0 && scrollX >= scrollMaxX - 30;
+
+      if (nearStart && e.deltaY < 0) {
+        // At the start, user scrolling "up/backward" → go to previous view
+        overScrollDelta += Math.abs(e.deltaY);
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { overScrollDelta = 0; }, 600);
+        
+        if (overScrollDelta >= TRIGGER_THRESHOLD) {
+          overScrollDelta = 0;
+          onNavigateBackRef.current();
+        }
+      } else if (nearEnd && e.deltaY > 0) {
+        // At the end, user scrolling "down/forward" → go to next view
+        overScrollDelta += Math.abs(e.deltaY);
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { overScrollDelta = 0; }, 600);
+        
+        if (overScrollDelta >= TRIGGER_THRESHOLD) {
+          overScrollDelta = 0;
+          onNavigateToAboutRef.current();
+        }
+      } else {
+        // Not at boundary or wrong direction → reset
+        overScrollDelta = 0;
+        if (resetTimer) clearTimeout(resetTimer);
+      }
     };
 
     const initializeScrollAndCursor = async () => {
@@ -59,6 +115,15 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
         });
 
         scrollRef.current.on('scroll', (obj: any) => {
+          // Track scroll position for boundary detection
+          scrollX = obj.scroll?.x ?? 0;
+          scrollMaxX = obj.limit?.x ?? 0;
+          
+          if (!scrollReady && scrollMaxX > 0) {
+            scrollReady = true;
+            console.log('Scroll ready, max:', scrollMaxX);
+          }
+
           for (const key of Object.keys(obj.currentElements)) {
             const element = obj.currentElements[key];
             
@@ -78,7 +143,12 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
 
         setTimeout(() => {
           scrollRef.current.update();
-          console.log('Scroll updated');
+          // Also try to get initial limit
+          if (scrollRef.current.scroll?.instance) {
+            scrollMaxX = scrollRef.current.scroll.instance.limit?.x ?? 0;
+            if (scrollMaxX > 0) scrollReady = true;
+          }
+          console.log('Scroll updated, limit:', scrollMaxX);
         }, 1000);
 
         cursorRef.current = new Cursor(document.querySelector('.cursor'));
@@ -87,6 +157,12 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
           link.addEventListener('mouseenter', () => cursorRef.current?.enter());
           link.addEventListener('mouseleave', () => cursorRef.current?.leave());
         });
+
+        // Add boundary wheel listener on the view container
+        const viewContainer = document.querySelector('.view--2');
+        if (viewContainer) {
+          viewContainer.addEventListener('wheel', handleBoundaryWheel, { passive: true });
+        }
 
         document.body.classList.remove('loading');
         console.log('Initialization complete');
@@ -104,6 +180,11 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
         console.log('Destroying Locomotive Scroll');
         scrollRef.current.destroy();
       }
+      const viewContainer = document.querySelector('.view--2');
+      if (viewContainer) {
+        viewContainer.removeEventListener('wheel', handleBoundaryWheel);
+      }
+      if (resetTimer) clearTimeout(resetTimer);
       document.body.classList.remove('loading');
     };
   }, []);
@@ -118,35 +199,19 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
       <main data-scroll-container className="h-full">
         <div className="content">
           <div className="gallery" id="gallery">
-            <div className="navigation-container">
-              <div className="back-arrow-container">
-                <div 
-                  onClick={onNavigateBack}
-                  className="back-arrow"
-                  data-scroll 
-                  data-scroll-speed="-4" 
-                  data-scroll-direction="vertical"
-                >
-                  <ArrowUp />
-                  <div className="rotating-text">
-                    <svg viewBox="0 0 100 100" width="100" height="100">
-                      <defs>
-                        <path id="circle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/>
-                      </defs>
-                      <text>
-                        <textPath href="#circle">
-                          back to main • back to main • 
-                        </textPath>
-                      </text>
-                    </svg>
-                  </div>
-                </div>
-              </div>
+            {/* Scroll boundary hint - start */}
+            <div className="scroll-boundary-hint scroll-boundary-hint--start">
+              <ChevronLeft className="boundary-arrow" />
+              <span>Home</span>
+            </div>
+
+            <div className="scroll-start-spacer">
               <div className="scroll-indicator">
                 <ArrowRight />
                 <span>scroll to explore</span>
               </div>
             </div>
+
             {[1, 2, 3, 4, 5, 6, 7, 8].map((num, idx) => (
               <figure 
                 key={num} 
@@ -204,19 +269,11 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
                 </figcaption>
               </figure>
             ))}
-            <div className="about-me-container">
-              <div className="about-me-card"
-                onClick={onNavigateToAbout}
-                data-scroll 
-                data-scroll-speed="2"
-                data-scroll-direction="vertical"
-              >
-                <h3 className="about-me-title">About Me</h3>
-                <p className="about-me-subtitle">Let's work together</p>
-                <div className="about-me-circle">
-                  <ArrowRight />
-                </div>
-              </div>
+
+            {/* Scroll boundary hint - end */}
+            <div className="scroll-boundary-hint scroll-boundary-hint--end">
+              <span>About Me</span>
+              <ChevronRight className="boundary-arrow" />
             </div>
           </div>
         </div>
