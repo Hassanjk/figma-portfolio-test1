@@ -1,9 +1,46 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
 import imagesLoaded from 'imagesloaded';
 import { preloadFonts } from '../check-implement-same/js/utils';
 import Cursor from '../check-implement-same/js/cursor';
 import { ArrowUp, ArrowRight } from 'lucide-react';
+import { useScrollStore } from '../store/useScrollStore';
+
+const EDGE_THRESHOLD = 40;
+const EDGE_INTENT_THRESHOLD = 90;
+const EDGE_LOCK_MS = 1700;
+
+type GalleryEdge = 'start' | 'end';
+
+type CursorInstance = {
+  enter: () => void;
+  leave: () => void;
+};
+
+type ScrollElementState = {
+  el: Element;
+  progress: number;
+};
+
+type LocomotiveScrollEvent = {
+  currentElements?: Record<string, ScrollElementState>;
+  limit?: { x?: number };
+  scroll?: { x?: number };
+};
+
+type LocomotiveScrollInstance = {
+  destroy: () => void;
+  on: (event: 'scroll', callback: (event: LocomotiveScrollEvent) => void) => void;
+  scroll?: {
+    instance?: {
+      limit?: { x?: number };
+      scroll?: { x?: number };
+    };
+  };
+  start?: () => void;
+  stop?: () => void;
+  update: () => void;
+};
 
 interface ProjectsProps {
   onNavigateBack: () => void;
@@ -11,13 +48,66 @@ interface ProjectsProps {
   onSelectProject: (projectId: number) => void;
 }
 
-const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBack, onNavigateToAbout, onSelectProject }, ref) => {
-  const cursorRef = useRef<any>(null);
-  const scrollRef = useRef<any>(null);
+const Projects: React.FC<ProjectsProps> = ({ onNavigateBack, onNavigateToAbout, onSelectProject }) => {
+  const cursorRef = useRef<CursorInstance | null>(null);
+  const scrollRef = useRef<LocomotiveScrollInstance | null>(null);
+  const edgeStateRef = useRef({ x: 0, limit: 0 });
+  const edgeIntentRef = useRef({ start: 0, end: 0 });
+  const transitionLockRef = useRef(false);
+  const navigateBackRef = useRef(onNavigateBack);
+  const navigateToAboutRef = useRef(onNavigateToAbout);
+  const { currentView, isAnimating } = useScrollStore();
+  const scrollStateRef = useRef({ currentView, isAnimating });
+
+  useEffect(() => {
+    navigateBackRef.current = onNavigateBack;
+  }, [onNavigateBack]);
+
+  useEffect(() => {
+    navigateToAboutRef.current = onNavigateToAbout;
+  }, [onNavigateToAbout]);
+
+  useEffect(() => {
+    scrollStateRef.current = { currentView, isAnimating };
+  }, [currentView, isAnimating]);
+
+  const resetEdgeIntent = useCallback(() => {
+    edgeIntentRef.current = { start: 0, end: 0 };
+  }, [resetEdgeIntent, syncEdgeState, triggerEdgeTransition]);
+
+  const syncEdgeState = useCallback((scrollEvent?: LocomotiveScrollEvent) => {
+    const instance = scrollRef.current?.scroll?.instance;
+
+    edgeStateRef.current = {
+      x: scrollEvent?.scroll?.x ?? instance?.scroll?.x ?? 0,
+      limit: scrollEvent?.limit?.x ?? instance?.limit?.x ?? 0,
+    };
+  }, []);
+
+  const triggerEdgeTransition = useCallback((edge: GalleryEdge) => {
+    if (transitionLockRef.current) return;
+
+    transitionLockRef.current = true;
+    resetEdgeIntent();
+    scrollRef.current?.stop?.();
+
+    if (edge === 'start') {
+      navigateBackRef.current();
+    } else {
+      navigateToAboutRef.current();
+    }
+
+    window.setTimeout(() => {
+      transitionLockRef.current = false;
+    }, EDGE_LOCK_MS);
+  }, [resetEdgeIntent]);
 
   useEffect(() => {
     console.log('Initializing Projects component');
     document.body.classList.add('loading');
+    let scrollContainer: Element | null = null;
+    let handleWheelAtEdges: ((event: WheelEvent) => void) | null = null;
+    let isMounted = true;
 
     const preloadImages = () => {
       return new Promise((resolve) => {
@@ -35,32 +125,45 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
     const initializeScrollAndCursor = async () => {
       try {
         await Promise.all([preloadImages(), preloadFonts()]);
+        if (!isMounted) return;
         
         console.log('Initializing Locomotive Scroll');
-        const scrollContainer = document.querySelector('[data-scroll-container]');
+        scrollContainer = document.querySelector('[data-scroll-container]');
         console.log('Scroll container found:', scrollContainer !== null);
+        if (!scrollContainer) {
+          throw new Error('Projects scroll container was not found.');
+        }
         
         scrollRef.current = new LocomotiveScroll({
           el: scrollContainer,
           smooth: true,
           direction: 'horizontal',
+          gestureDirection: 'both',
+          scrollFromAnywhere: true,
           multiplier: 0.9,
           lerp: 0.1,
+          getDirection: true,
+          getSpeed: true,
           tablet: {
             smooth: true,
             direction: 'horizontal',
+            gestureDirection: 'both',
             horizontalGesture: true
           },
           smartphone: {
             smooth: true,
             direction: 'horizontal',
+            gestureDirection: 'both',
             horizontalGesture: true
           }
-        });
+        }) as LocomotiveScrollInstance;
 
-        scrollRef.current.on('scroll', (obj: any) => {
-          for (const key of Object.keys(obj.currentElements)) {
-            const element = obj.currentElements[key];
+        scrollRef.current.on('scroll', (obj: LocomotiveScrollEvent) => {
+          syncEdgeState(obj);
+
+          for (const key of Object.keys(obj.currentElements ?? {})) {
+            const element = obj.currentElements?.[key];
+            if (!element) continue;
             
             if (element.el.classList.contains('gallery__item-imginner')) {
               const progress = element.progress;
@@ -76,12 +179,62 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
           }
         });
 
+        syncEdgeState();
+
+        if (scrollStateRef.current.currentView !== 2) {
+          scrollRef.current.stop?.();
+        }
+
+        handleWheelAtEdges = (event: WheelEvent) => {
+          const { currentView, isAnimating } = scrollStateRef.current;
+          if (currentView !== 2 || isAnimating || transitionLockRef.current) return;
+
+          const dominantDelta = Math.abs(event.deltaY) >= Math.abs(event.deltaX)
+            ? event.deltaY
+            : event.deltaX;
+
+          if (Math.abs(dominantDelta) < 1) return;
+
+          const { x, limit } = edgeStateRef.current;
+          const atStart = x <= EDGE_THRESHOLD;
+          const atEnd = limit > 0 && limit - x <= EDGE_THRESHOLD;
+
+          if (atStart && dominantDelta < 0) {
+            edgeIntentRef.current.start += Math.abs(dominantDelta);
+            edgeIntentRef.current.end = 0;
+
+            if (edgeIntentRef.current.start >= EDGE_INTENT_THRESHOLD) {
+              event.preventDefault();
+              triggerEdgeTransition('start');
+            }
+
+            return;
+          }
+
+          if (atEnd && dominantDelta > 0) {
+            edgeIntentRef.current.end += Math.abs(dominantDelta);
+            edgeIntentRef.current.start = 0;
+
+            if (edgeIntentRef.current.end >= EDGE_INTENT_THRESHOLD) {
+              event.preventDefault();
+              triggerEdgeTransition('end');
+            }
+
+            return;
+          }
+
+          resetEdgeIntent();
+        };
+
+        window.addEventListener('wheel', handleWheelAtEdges, { passive: false });
+
         setTimeout(() => {
-          scrollRef.current.update();
+          scrollRef.current?.update();
+          syncEdgeState();
           console.log('Scroll updated');
         }, 1000);
 
-        cursorRef.current = new Cursor(document.querySelector('.cursor'));
+        cursorRef.current = new Cursor(document.querySelector('.cursor')) as CursorInstance;
 
         [...document.querySelectorAll('a,.gallery__item-img,.gallery__item-number')].forEach(link => {
           link.addEventListener('mouseenter', () => cursorRef.current?.enter());
@@ -100,13 +253,35 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
     initializeScrollAndCursor();
 
     return () => {
+      isMounted = false;
       if (scrollRef.current) {
         console.log('Destroying Locomotive Scroll');
         scrollRef.current.destroy();
       }
+      if (handleWheelAtEdges) {
+        window.removeEventListener('wheel', handleWheelAtEdges);
+      }
       document.body.classList.remove('loading');
     };
   }, []);
+
+  useEffect(() => {
+    if (!scrollRef.current) return;
+
+    if (currentView === 2) {
+      scrollRef.current.start?.();
+
+      const updateTimer = window.setTimeout(() => {
+        scrollRef.current?.update?.();
+        syncEdgeState();
+      }, 120);
+
+      return () => window.clearTimeout(updateTimer);
+    }
+
+    scrollRef.current.stop?.();
+    resetEdgeIntent();
+  }, [currentView, resetEdgeIntent, syncEdgeState]);
 
   const projectTitles = [
     'Funambulist', 'Omophagy', 'Conniption', 'Xenology', 
@@ -116,13 +291,12 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <main data-scroll-container className="h-full">
-        <div className="content">
+        <div className="content" data-scroll-section>
           <div className="gallery" id="gallery">
             <div className="navigation-container">
-              <div className="back-arrow-container">
+              <div className="back-arrow-container" data-nav-edge="start" aria-hidden="true">
                 <div 
-                  onClick={onNavigateBack}
-                  className="back-arrow"
+                  className="back-arrow back-arrow--passive"
                   data-scroll 
                   data-scroll-speed="-4" 
                   data-scroll-direction="vertical"
@@ -144,7 +318,7 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
               </div>
               <div className="scroll-indicator">
                 <ArrowRight />
-                <span>scroll to explore</span>
+                <span>selected work</span>
               </div>
             </div>
             {[1, 2, 3, 4, 5, 6, 7, 8].map((num, idx) => (
@@ -204,13 +378,15 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
                 </figcaption>
               </figure>
             ))}
-            <div className="about-me-container">
-              <div className="about-me-card"
-                onClick={onNavigateToAbout}
+            <div className="about-me-container" data-nav-edge="end">
+              <div 
+                className="about-me-card about-me-card--passive"
                 data-scroll 
                 data-scroll-speed="2"
                 data-scroll-direction="vertical"
+                aria-hidden="true"
               >
+                <p className="about-me-kicker">Next</p>
                 <h3 className="about-me-title">About Me</h3>
                 <p className="about-me-subtitle">Let's work together</p>
                 <div className="about-me-circle">
@@ -226,6 +402,6 @@ const Projects = React.forwardRef<HTMLDivElement, ProjectsProps>(({ onNavigateBa
       </svg>
     </div>
   );
-});
+};
 
 export default Projects;

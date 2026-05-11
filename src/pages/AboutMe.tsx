@@ -6,7 +6,7 @@ interface AboutMeProps {
   onNavigateToContact: () => void;
 }
 
-const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack, onNavigateToContact }, ref) => {
+const AboutMe: React.FC<AboutMeProps> = ({ onNavigateBack, onNavigateToContact }) => {
   useEffect(() => {
     // Add parallax effect on mouse move
     const handleMouseMove = (e: MouseEvent) => {
@@ -110,6 +110,6 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
       </div>
     </div>
   );
-});
+};
 
 export default AboutMe;

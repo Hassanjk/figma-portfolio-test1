@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import Projects from './pages/Projects';
@@ -22,7 +22,7 @@ function AppContent() {
   const view4Ref = useRef<HTMLDivElement>(null);
   const projectViewRef = useRef<HTMLDivElement>(null);
 
-  const handleViewTransition = (direction: 'up' | 'down', targetView: number) => {
+  const handleViewTransition = useCallback((targetView: number) => {
     if (isAnimating) return;
     
     if (currentView === 1 && targetView !== 2) return;
@@ -86,7 +86,7 @@ function AppContent() {
         )
         .add(() => setCurrentView(3));
     }
-  };
+  }, [currentView, isAnimating, setCurrentView, setIsAnimating]);
 
   const handleProjectSelect = (projectId: number) => {
     if (isAnimating) return;
@@ -132,29 +132,40 @@ function AppContent() {
     gsap.set(view3Ref.current, { yPercent: currentView === 3 ? 0 : 100 });
     gsap.set(view4Ref.current, { yPercent: currentView === 4 ? 0 : 100 });
 
+    if (currentView === 2) {
+      return;
+    }
+
+    const handleWheel = (event: WheelEvent | { deltaY: number; preventDefault?: () => void }) => {
+      event.preventDefault?.();
+
+      if (isAnimating) return;
+      
+      const scrollingDown = event.deltaY > 0;
+      
+      if (scrollingDown && currentView === 1) {
+        handleViewTransition(2);
+      } else if (!scrollingDown && currentView === 3) {
+        handleViewTransition(2);
+      } else if (!scrollingDown && currentView === 4) {
+        handleViewTransition(3);
+      }
+    };
+
     const observer = Observer.create({
       target: window,
       type: 'wheel',
-      onChange: (event) => {
-        if (isAnimating || currentView === 2) return;
-        
-        const scrollingDown = event.deltaY > 0;
-        
-        if (scrollingDown && currentView === 1) {
-          handleViewTransition('down', 2);
-        } else if (!scrollingDown && currentView === 3) {
-          handleViewTransition('up', 2);
-        } else if (!scrollingDown && currentView === 4) {
-          handleViewTransition('up', 3);
-        }
-      },
+      onChange: handleWheel,
       preventDefault: true
     });
 
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
     return () => {
-      if (observer) observer.kill();
+      observer.kill();
+      window.removeEventListener('wheel', handleWheel);
     };
-  }, [currentView, isAnimating]);
+  }, [currentView, handleViewTransition, isAnimating]);
 
   return (
     <div className="bg-black min-h-screen text-white overflow-hidden">
@@ -193,21 +204,21 @@ function AppContent() {
 
         <div ref={view2Ref} className="view view--2">
           <Projects 
-            onNavigateBack={() => handleViewTransition('up', 1)}
-            onNavigateToAbout={() => handleViewTransition('down', 3)}
+            onNavigateBack={() => handleViewTransition(1)}
+            onNavigateToAbout={() => handleViewTransition(3)}
             onSelectProject={handleProjectSelect}
           />
         </div>
 
         <div ref={view3Ref} className="view view--3">
           <AboutMe 
-            onNavigateBack={() => handleViewTransition('up', 2)}
-            onNavigateToContact={() => handleViewTransition('down', 4)}
+            onNavigateBack={() => handleViewTransition(2)}
+            onNavigateToContact={() => handleViewTransition(4)}
           />
         </div>
 
         <div ref={view4Ref} className="view view--4">
-          <Contact onNavigateBack={() => handleViewTransition('up', 3)} />
+          <Contact />
         </div>
 
         <div 

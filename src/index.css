@@ -49,6 +49,16 @@ body {
   overflow: hidden;
 }
 
+.view--2 .content,
+.view--2 .gallery {
+  width: max-content;
+  min-width: 100vw;
+}
+
+.view--2 .content {
+  height: 100vh;
+}
+
 /* Gallery Styles */
 .gallery {
   display: flex;
@@ -394,6 +404,18 @@ html.has-scroll-dragging {
   background: #3d3d3d;
 }
 
+.back-arrow--passive {
+  cursor: default;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(42, 42, 42, 0.55);
+}
+
+.back-arrow--passive:hover {
+  transform: none;
+  background: rgba(42, 42, 42, 0.55);
+}
+
 .back-arrow svg {
   width: 40px;
   height: 40px;
@@ -448,6 +470,22 @@ html.has-scroll-dragging {
   position: relative;
 }
 
+.back-arrow-container[data-nav-edge="start"]::before {
+  content: '';
+  position: absolute;
+  top: -8vh;
+  bottom: -8vh;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+  transform: translateX(-50%);
+}
+
 .scroll-indicator {
   display: flex;
   align-items: center;
@@ -480,6 +518,23 @@ html.has-scroll-dragging {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 420px;
+  position: relative;
+}
+
+.about-me-container[data-nav-edge="end"]::before {
+  content: '';
+  position: absolute;
+  top: 12vh;
+  bottom: 12vh;
+  left: -3vw;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
 }
 
 .about-me-card {
@@ -497,9 +552,32 @@ html.has-scroll-dragging {
   transition: all 0.3s ease;
 }
 
+.about-me-kicker {
+  color: #9ca3af;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.about-me-card--passive {
+  cursor: default;
+  pointer-events: none;
+}
+
+.about-me-card--passive:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: none;
+}
+
 .about-me-card:hover {
   background: rgba(255, 255, 255, 0.06);
   transform: translateY(-5px);
+}
+
+.about-me-card--passive:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: none;
 }
 
 .about-me-title {
@@ -532,6 +610,11 @@ html.has-scroll-dragging {
 .about-me-card:hover .about-me-circle {
   background: #3d3d3d;
   transform: translateX(5px);
+}
+
+.about-me-card--passive:hover .about-me-circle {
+  background: #2a2a2a;
+  transform: none;
 }
 
 .about-me-circle svg {
@@ -567,4 +650,3 @@ html.has-scroll-dragging {
     margin-top: 88px !important;
  }
 }
-

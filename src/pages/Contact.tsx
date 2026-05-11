@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { Mail, MapPin, Phone, Send, Linkedin, Github, Twitter } from 'lucide-react';
 
-interface ContactProps {
-  onNavigateBack: () => void;
-}
-
-const Contact = React.forwardRef<HTMLDivElement, ContactProps>(({ onNavigateBack }, ref) => {
+const Contact: React.FC = () => {
   useEffect(() => {
     // Add parallax effect on mouse move
     const handleMouseMove = (e: MouseEvent) => {
@@ -104,6 +100,6 @@ const Contact = React.forwardRef<HTMLDivElement, ContactProps>(({ onNavigateBack
       </div>
     </div>
   );
-});
+};
 
 export default Contact;

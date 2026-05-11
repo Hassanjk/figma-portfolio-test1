@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Menu } from 'lucide-react';
 import { gsap } from 'gsap';
 import { useScrollStore } from '../store/useScrollStore';
 import AnimatedMenu from './AnimatedMenu';
