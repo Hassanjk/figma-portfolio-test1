@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
 import Projects from './pages/Projects';
 import AboutMe from './pages/AboutMe';
 import Contact from './pages/Contact';
 import SingleProject from './pages/SingleProject';
 import Header from './components/Header';
+import HeroFidelity from './components/HeroFidelity/HeroFidelity';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
 import { useScrollStore } from './store/useScrollStore';
@@ -162,32 +162,8 @@ function AppContent() {
 
       <div className="relative w-full h-screen overflow-hidden">
         <div ref={view1Ref} className="view view--1">
-          <div className="relative min-h-screen">
-            <div className="absolute inset-0 md:right-0 md:w-1/2 h-full">
-              <img 
-                src="/assets/img/person.png"
-                alt="Designer"
-                className="w-full h-full object-cover opacity-50 md:opacity-100"
-              />
-              <div className="absolute inset-0 bg-black/50 md:hidden"></div>
-            </div>
-            
-            <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-6 md:px-16 lg:px-24">
-              <h1 className="hero-title text-6xl md:text-8xl lg:text-[6.4rem] w-full md:mr-[-79%]">
-                Digital
-                <br />
-                <span className="block md:ml-32">Product</span>
-                <span className="block md:ml-16">Designer</span>
-              </h1>
-              <p className="hero-sub text-xl md:text-2xl mt-8 text-gray-400 max-w-md">
-                Crafting immersive digital experiences through innovative design solutions
-              </p>
-            </div>
-
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 z-20">
-              <span className="text-sm">Scroll to find more</span>
-              <ChevronDown className="animate-bounce" />
-            </div>
+          <div className="relative h-screen w-full overflow-hidden">
+            <HeroFidelity />
           </div>
         </div>
 
