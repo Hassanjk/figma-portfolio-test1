@@ -41,7 +41,7 @@ const AboutMe = React.forwardRef<HTMLDivElement, AboutMeProps>(({ onNavigateBack
   }, [onNavigateToContact, onNavigateBack]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#131212] text-white">
+    <div className="relative w-full h-screen overflow-hidden text-white">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-r from-[#2a2a2a] to-transparent rounded-full blur-3xl opacity-20" data-parallax="20" />

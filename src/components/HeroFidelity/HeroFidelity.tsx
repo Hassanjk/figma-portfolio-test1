@@ -444,7 +444,7 @@ function Image1() {
 
 function MobileHero() {
   return (
-    <div className="relative h-full w-full overflow-hidden bg-black px-7 pt-[104px] lg:hidden">
+    <div className="relative h-full w-full overflow-hidden px-7 pt-[104px] lg:hidden">
       <img alt="" className="absolute inset-0 size-full object-cover" src={heroTexture} />
       <IconWrap />
 
@@ -498,7 +498,7 @@ function Desktop() {
 
 export default function HeroFidelity() {
   return (
-    <div className="relative size-full overflow-hidden bg-black" data-name="Container">
+    <div className="relative size-full overflow-hidden" data-name="Container">
       <div className="hidden size-full lg:block">
         <Desktop />
       </div>

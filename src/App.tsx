@@ -10,6 +10,7 @@ import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
 import { useScrollStore } from './store/useScrollStore';
 import './styles/singleProject.css';
+import heroTexture from './components/HeroFidelity/texture.png';
 
 gsap.registerPlugin(Observer);
 
@@ -157,55 +158,68 @@ function AppContent() {
   }, [currentView, isAnimating]);
 
   return (
-    <div className="bg-black min-h-screen text-white overflow-hidden">
+    <div className="min-h-screen text-white overflow-hidden relative">
+      <div
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundColor: '#0a0a0a',
+          backgroundImage: `url(${heroTexture})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      <div className="relative z-10 min-h-screen">
       <Header />
 
       <div className="relative w-full h-screen overflow-hidden">
-        <div ref={view1Ref} className="view view--1">
+        <div ref={view1Ref} className="view view--1 view-bg" style={{ backgroundImage: `url(${heroTexture})` }}>
           <div className="relative h-screen w-full overflow-hidden">
             <HeroFidelity />
           </div>
         </div>
 
-        <div ref={view2Ref} className="view view--2">
-          <Projects 
+        <div ref={view2Ref} className="view view--2 view-bg" style={{ backgroundImage: `url(${heroTexture})` }}>
+          <Projects
             onNavigateBack={() => handleViewTransition('up', 1)}
             onNavigateToAbout={() => handleViewTransition('down', 3)}
             onSelectProject={handleProjectSelect}
           />
         </div>
 
-        <div ref={view3Ref} className="view view--3">
-          <AboutMe 
+        <div ref={view3Ref} className="view view--3 view-bg" style={{ backgroundImage: `url(${heroTexture})` }}>
+          <AboutMe
             onNavigateBack={() => handleViewTransition('up', 2)}
             onNavigateToContact={() => handleViewTransition('down', 4)}
           />
         </div>
 
-        <div ref={view4Ref} className="view view--4">
+        <div ref={view4Ref} className="view view--4 view-bg" style={{ backgroundImage: `url(${heroTexture})` }}>
           <Contact onNavigateBack={() => handleViewTransition('up', 3)} />
         </div>
 
-        <div 
-          ref={projectViewRef} 
-          className="view project-view"
-          style={{ 
-            position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            width: '100%', 
-            height: '100%', 
+        <div
+          ref={projectViewRef}
+          className="view project-view view-bg"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
             visibility: 'hidden',
-            zIndex: -1
+            zIndex: -1,
+            backgroundImage: `url(${heroTexture})`
           }}
         >
           {selectedProjectId !== null && (
-            <SingleProject 
+            <SingleProject
               projectId={selectedProjectId}
               onNavigateBack={handleReturnFromProject}
             />
           )}
         </div>
+      </div>
       </div>
     </div>
   );

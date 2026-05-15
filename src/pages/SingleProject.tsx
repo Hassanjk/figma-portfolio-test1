@@ -81,7 +81,7 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
   }, [projectId]);
 
   return (
-    <div className="single-project relative w-full h-screen bg-black text-white overflow-hidden">
+    <div className="single-project relative w-full h-screen text-white overflow-hidden">
       <div className="fixed top-10 left-10 z-50">
         <button 
           onClick={onNavigateBack}
@@ -126,7 +126,7 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
         </section>
 
         <section 
-          className="project-gallery py-32 bg-black"
+          className="project-gallery py-32"
           data-scroll-section
         >
           <div className="container mx-auto px-8">
@@ -219,7 +219,7 @@ const SingleProject: React.FC<SingleProjectProps> = ({ projectId, onNavigateBack
         </section>
 
         <section 
-          className="next-project-section py-32 bg-zinc-900"
+          className="next-project-section py-32"
           data-scroll-section
         >
           <div className="container mx-auto px-8 text-center">

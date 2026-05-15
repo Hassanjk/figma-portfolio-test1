@@ -84,9 +84,9 @@ const AnimatedMenu: React.FC<AnimatedMenuProps> = ({ isOpen, onClose }) => {
       className="fixed inset-0 z-50"
       style={{ display: 'none' }}
     >
-      <div 
-        ref={menuBgRef} 
-        className="absolute inset-0 bg-[#131212]"
+      <div
+        ref={menuBgRef}
+        className="absolute inset-0 bg-[#0a0a0a]/90 backdrop-blur-sm"
         style={{ clipPath: "circle(0% at top right)" }}
       >
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-white opacity-5"></div>

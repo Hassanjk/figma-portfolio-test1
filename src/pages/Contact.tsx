@@ -26,7 +26,7 @@ const Contact = React.forwardRef<HTMLDivElement, ContactProps>(({ onNavigateBack
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#131212] text-white">
+    <div className="relative w-full h-screen overflow-hidden text-white">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-r from-[#2a2a2a] to-transparent rounded-full blur-3xl opacity-20" data-parallax="20" />
