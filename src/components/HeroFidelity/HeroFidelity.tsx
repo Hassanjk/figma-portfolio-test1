@@ -5,9 +5,9 @@ import heroPortrait from "./portrait.png";
 
 function Component7FDbzEtk0Ry7IMoDevrZq9D7IfgPng() {
   return (
-    <div className="h-[921.16px] relative shrink-0 w-[1440px]" data-name="7fDbzETK0Ry7iMoDEVRZq9D7Ifg.png">
+    <div className="absolute inset-0" data-name="7fDbzETK0Ry7iMoDEVRZq9D7Ifg.png">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img alt="" className="absolute h-[117.24%] left-0 max-w-none top-[-8.62%] w-full" src={heroTexture} />
+        <img alt="" className="absolute inset-0 size-full object-cover" src={heroTexture} />
       </div>
     </div>
   );
@@ -283,7 +283,7 @@ function Mbx5NRllcTuIwuvie21W2JBYoPng() {
   return (
     <div className="h-[740px] relative shrink-0 w-full" data-name="Mbx5NRllcTUIwuvie21w2jBYo.png">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <img alt="" className="absolute h-[123.16%] left-0 max-w-none top-0 w-full" src={heroPortrait} />
+        <img alt="" className="absolute h-[123.16%] left-0 max-w-none mix-blend-lighten top-0 w-full" src={heroPortrait} />
       </div>
     </div>
   );
@@ -454,7 +454,7 @@ function MobileHero() {
 
       <img
         alt=""
-        className="absolute bottom-[-8px] left-1/2 z-10 h-[610px] max-w-none -translate-x-[38%] object-contain"
+        className="absolute bottom-[-8px] left-1/2 z-10 h-[610px] max-w-none -translate-x-[38%] mix-blend-lighten object-contain"
         src={heroPortrait}
       />
 
@@ -489,7 +489,7 @@ function Container2() {
 
 function Desktop() {
   return (
-    <div className="content-stretch flex items-center justify-center overflow-clip pt-[100px] px-[100px] relative shrink-0" data-name="Desktop">
+    <div className="content-stretch flex h-full w-full items-center justify-center overflow-clip pt-[100px] px-[100px] relative" data-name="Desktop">
       <Container1 />
       <Container2 />
     </div>
